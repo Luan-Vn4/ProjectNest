@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class Usuario {
     private @NotNull String senha;
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object)        {
         if (this == object) return true;
         if (object == null) return false;
         Class<?> oEffectiveClass = object instanceof HibernateProxy
