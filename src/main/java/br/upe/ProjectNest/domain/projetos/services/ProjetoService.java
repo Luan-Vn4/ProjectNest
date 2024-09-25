@@ -14,7 +14,7 @@ public interface ProjetoService {
 
     public UUID save(ProjetoDTO projetoDTO);
 
-    public void update(ProjetoDTO projetoDTO);
+    public Projeto update(Projeto projeto);
 
     public void delete(UUID id);
 }

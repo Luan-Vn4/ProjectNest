@@ -40,12 +40,21 @@ public class ProjetoController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity delete(@PathVariable UUID id) {
         try {
-        projetoService.delete(id);
-        return ResponseEntity.noContent().build();
+            projetoService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Projeto> update(@RequestBody Projeto projeto) {
+        try {
+            projetoService.update(projeto);
+            return ResponseEntity.ok().body(projeto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
