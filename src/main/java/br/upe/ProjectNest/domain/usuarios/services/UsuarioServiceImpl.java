@@ -13,6 +13,7 @@ import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
     UsuarioMapper usuarioMapper;
