@@ -3,10 +3,12 @@ package br.upe.ProjectNest.domain.usuarios.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,13 +22,15 @@ public class Usuario {
     @GeneratedValue(strategy= GenerationType.UUID)
     private UUID uuid;
 
+    @Size(max=50)
     @Column(name="apelido", unique=true, length=50)
     private @NotNull String apelido;
 
-    @Email
+    @Email @Size(max=255)
     @Column(name="email", unique=true)
     private @NotNull String email;
 
+    @Size(min=60, max=60)
     @Column(name="senha", length=60, columnDefinition="bpchar(60)")
     private @NotNull String senha;
 

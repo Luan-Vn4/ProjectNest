@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 public class Empresa extends Usuario {
 
+    @Size(max=14)
     @Column(name="cnpj", length=14, updatable=false, unique=true)
     private @NotNull String cnpj;
 
