@@ -25,7 +25,7 @@ public class SpringPageAdapter<T> implements PaginatedResult<T> {
     @Override
     @JsonProperty("currentPage")
     public int getCurrentPage() {
-        return page.getNumber();
+        return page.getNumber()+1;
     }
 
     @Override

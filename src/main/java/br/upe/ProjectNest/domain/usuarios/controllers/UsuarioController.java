@@ -4,7 +4,7 @@ import br.upe.ProjectNest.domain.common.pagination.PaginatedResult;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioRegistrationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> register(@Valid @RequestBody UsuarioRegistrationDTO usuario) {
+    public ResponseEntity<UsuarioDTO> register(@Valid @RequestBody UsuarioCreationDTO usuario) {
         UsuarioDTO saved = usuarioService.registerUsuario(usuario);
         return ResponseEntity.ok().body(saved);
     }
@@ -40,7 +39,7 @@ public class UsuarioController {
     public ResponseEntity<PaginatedResult<UsuarioDTO>> searchByApelido(
         @PathVariable("apelido") String apelido, @RequestParam("current-page") int currentPage,
         @RequestParam("page-size") int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize);
         return ResponseEntity.ok(usuarioService.searchByApelido(apelido, pageable));
     }
 
@@ -48,7 +47,7 @@ public class UsuarioController {
     public ResponseEntity<PaginatedResult<PessoaDTO>> searchPessoaByApelido(
         @PathVariable("apelido") String apelido, @RequestParam("current-page") int currentPage,
         @RequestParam("page-size") int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize);
         return ResponseEntity.ok(usuarioService.searchPessoaByApelido(apelido, pageable));
     }
 
@@ -56,14 +55,14 @@ public class UsuarioController {
     public ResponseEntity<PaginatedResult<EmpresaDTO>> searchEmpresaByNome(
         @PathVariable("nome") String nome, @RequestParam("current-page") int currentPage,
         @RequestParam("page-size") int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize);
         return ResponseEntity.ok(usuarioService.searchEmpresaByNome(nome, pageable));
     }
 
     @GetMapping("/empresas")
     public ResponseEntity<PaginatedResult<EmpresaDTO>> getAllEmpresas(
         @RequestParam("current-page") int currentPage, @RequestParam("page-size") int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize);
         return ResponseEntity.ok(usuarioService.getAllEmpresas(pageable));
     }
 
