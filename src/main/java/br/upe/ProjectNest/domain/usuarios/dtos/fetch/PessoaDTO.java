@@ -1,5 +1,6 @@
 package br.upe.ProjectNest.domain.usuarios.dtos.fetch;
 
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,4 +22,11 @@ public record PessoaDTO(
     @NotNull @Size(max = 50)
     String sobrenome,
     @Size(max = 25)
-    String pronomes) implements UsuarioDTO {}
+    String pronomes) implements UsuarioDTO {
+
+    @Override
+    public UsuarioType type() {
+        return UsuarioType.PESSOA;
+    }
+
+}
