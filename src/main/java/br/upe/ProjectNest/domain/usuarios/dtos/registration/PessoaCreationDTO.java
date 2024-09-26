@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 /**
  * DTO for {@link br.upe.ProjectNest.domain.usuarios.models.Pessoa}
  */
-public record PessoaRegistrationDTO(
+public record PessoaCreationDTO(
     @NotNull @Size(max = 50)
     String apelido,
     @NotNull @Size(max = 255) @Email
@@ -19,5 +19,5 @@ public record PessoaRegistrationDTO(
     @NotNull @Size(max = 50)
     String sobrenome,
     @Size(max = 25)
-    String pronomes) implements UsuarioRegistrationDTO {
+    String pronomes) implements UsuarioCreationDTO {
 }

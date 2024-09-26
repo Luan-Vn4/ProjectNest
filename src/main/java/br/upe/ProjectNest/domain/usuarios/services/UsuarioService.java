@@ -4,7 +4,7 @@ import br.upe.ProjectNest.domain.common.pagination.PaginatedResult;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioRegistrationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface UsuarioService {
 
     // REGISTRO
-    UsuarioDTO registerUsuario(UsuarioRegistrationDTO dto);
+    UsuarioDTO registerUsuario(UsuarioCreationDTO dto);
 
     // BUSCA
     Optional<UsuarioDTO> getByUuid(UUID uuid);

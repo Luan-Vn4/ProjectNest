@@ -6,8 +6,8 @@ import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioRegistrationDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioRegistrationMapper;
+import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationMapper;
 import br.upe.ProjectNest.domain.usuarios.models.Empresa;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
@@ -27,14 +27,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     UsuarioMapper usuarioMapper;
 
-    UsuarioRegistrationMapper usuarioRegistrationMapper;
+    UsuarioCreationMapper usuarioCreationMapper;
 
     UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional
-    public UsuarioDTO registerUsuario(UsuarioRegistrationDTO dto) {
-        Usuario usuario = usuarioRegistrationMapper.toEntity(dto);
+    public UsuarioDTO registerUsuario(UsuarioCreationDTO dto) {
+        Usuario usuario = usuarioCreationMapper.toEntity(dto);
         return usuarioMapper.toDto(usuarioRepository.save(usuario));
     }
 
