@@ -19,3 +19,12 @@ public record EmpresaDTO (
   String senha,
   @NotNull @Size(max = 14)
   String cnpj) implements UsuarioDTO {}
+    @NotNull
+    UUID uuid,
+    @NotNull @Size(max = 50)
+    String apelido,
+    @NotNull @Size(max = 255) @Email
+    String email,
+    @NotNull @Size(max = 14)
+    String cnpj) implements UsuarioDTO {
+}
