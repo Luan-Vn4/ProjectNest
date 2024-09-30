@@ -4,19 +4,17 @@ import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
-import br.upe.ProjectNest.domain.projetos.models.enums.Escopo;
 import br.upe.ProjectNest.domain.projetos.repositories.ProjetoRepository;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -58,18 +56,27 @@ public class ProjetoServiceImpl implements ProjetoService {
     }
 
     @Override
+    @Transactional
     public void update(ProjetoDTO projetoDTO) {
-        Optional<Projeto> existingProjeto = projetoRepository.findById(projetoDTO.uuid());
+        Projeto existingProjeto = projetoRepository.findById(projetoDTO.uuid()).orElseThrow(() ->
+                new RuntimeException("Não foi possível encontrar um projeto com id: " + projetoDTO.uuid())
+        );
 
-        if (existingProjeto.isEmpty()) {
-            throw new RuntimeException("Não foi possivel encontrar um projeto com id: " + projetoDTO.uuid());
+        if (!existingProjeto.getDono().getUuid().equals(projetoDTO.idDono())) {
+            UsuarioDTO novoUsuario = usuarioService.getByUuid(projetoDTO.idDono())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + projetoDTO.idDono()));
+            existingProjeto.setDono(usuarioMapper.toEntity(novoUsuario));
         }
-        Projeto projeto = existingProjeto.get();
 
-        BeanUtils.copyProperties(projetoDTO, projeto);
+        existingProjeto.setTitulo(projetoDTO.titulo());
+        existingProjeto.setDescricao(projetoDTO.descricao());
+        existingProjeto.setUrlRepositorio(projetoDTO.urlRepositorio());
+        existingProjeto.setEscopo(projetoDTO.escopo());
+        existingProjeto.setStatus(projetoDTO.status());
 
-        projetoRepository.save(projeto);
+        projetoRepository.save(existingProjeto);
     }
+
 
     @Override
     public void delete(UUID id) {

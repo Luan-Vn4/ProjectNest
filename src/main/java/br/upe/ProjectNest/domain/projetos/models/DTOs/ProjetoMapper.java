@@ -15,6 +15,4 @@ public interface ProjetoMapper {
 
     @Mapping(source = "dono.uuid", target = "idDono")
     ProjetoDTO toDto(Projeto projeto);
-    
-
 }
