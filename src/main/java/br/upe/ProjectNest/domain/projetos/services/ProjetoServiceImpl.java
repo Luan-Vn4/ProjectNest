@@ -59,7 +59,16 @@ public class ProjetoServiceImpl implements ProjetoService {
 
     @Override
     public void update(ProjetoDTO projetoDTO) {
+        Optional<Projeto> existingProjeto = projetoRepository.findById(projetoDTO.uuid());
 
+        if (existingProjeto.isEmpty()) {
+            throw new RuntimeException("Não foi possivel encontrar um projeto com id: " + projetoDTO.uuid());
+        }
+        Projeto projeto = existingProjeto.get();
+
+        BeanUtils.copyProperties(projetoDTO, projeto);
+
+        projetoRepository.save(projeto);
     }
 
     @Override

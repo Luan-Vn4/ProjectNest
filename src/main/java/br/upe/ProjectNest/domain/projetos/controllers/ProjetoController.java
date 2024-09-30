@@ -2,7 +2,6 @@ package br.upe.ProjectNest.domain.projetos.controllers;
 
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
-import br.upe.ProjectNest.domain.projetos.models.Projeto;
 import br.upe.ProjectNest.domain.projetos.services.ProjetoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -38,11 +37,17 @@ public class ProjetoController {
         return ResponseEntity.ok().body(projetoService.save(projetoDTO));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity update(@Valid @RequestBody ProjetoDTO projetoDTO) {
+        projetoService.update(projetoDTO);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity delete(@PathVariable UUID id) {
         try {
-        projetoService.delete(id);
-        return ResponseEntity.noContent().build();
+            projetoService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
