@@ -7,5 +7,5 @@ public enum Escopo {
     EDUCACAO,
     CULINARIA,
     JOGO,
-    BIOLOGIA;
+    BIOLOGIA
 }

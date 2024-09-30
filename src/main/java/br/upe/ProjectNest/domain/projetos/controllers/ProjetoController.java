@@ -1,8 +1,10 @@
 package br.upe.ProjectNest.domain.projetos.controllers;
 
+import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
 import br.upe.ProjectNest.domain.projetos.services.ProjetoService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +20,12 @@ public class ProjetoController {
     private ProjetoService projetoService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Projeto>> getAll() {
-        System.out.println("entrou");
+    public ResponseEntity<List<ProjetoDTO>> getAll() {
         return ResponseEntity.ok().body(projetoService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Projeto> getById(@PathVariable UUID id) {
+    public ResponseEntity<ProjetoDTO> getById(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok().body(projetoService.getById(id));
         } catch (RuntimeException e) {
@@ -33,7 +34,7 @@ public class ProjetoController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UUID> create(@RequestBody ProjetoDTO projetoDTO) {
+    public ResponseEntity<ProjetoDTO> create(@Valid @RequestBody ProjetoCreationDTO projetoDTO) {
         return ResponseEntity.ok().body(projetoService.save(projetoDTO));
     }
 

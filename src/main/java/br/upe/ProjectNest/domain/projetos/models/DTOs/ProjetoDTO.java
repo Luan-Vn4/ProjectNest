@@ -3,20 +3,31 @@ package br.upe.ProjectNest.domain.projetos.models.DTOs;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
 import br.upe.ProjectNest.domain.projetos.models.enums.Escopo;
 import br.upe.ProjectNest.domain.projetos.models.enums.Status;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
-public record ProjetoDTO(UUID idDono, String titulo, String descricao, String urlRepositorio, Escopo escopo,
-                         Status status) {
-    public static ProjetoDTO from(Projeto projeto) {
-        return new ProjetoDTO(
-                projeto.getDono().getUuid(),
-                projeto.getTitulo(),
-                projeto.getDescricao(),
-                projeto.getUrlRepositorio(),
-                projeto.getEscopo(),
-                projeto.getStatus());
-    }
-
-
+public record ProjetoDTO(
+    @NotNull
+    UUID uuid,
+    
+    @NotNull
+    UUID idDono,
+    
+    @NotNull @Size(max = 100)
+    String titulo,
+    
+    @NotNull
+    String descricao,
+    
+    @Size(max = 255)
+    String urlRepositorio,
+    
+    @NotNull
+    Escopo escopo,
+    
+    @NotNull
+    Status status
+) {
 }

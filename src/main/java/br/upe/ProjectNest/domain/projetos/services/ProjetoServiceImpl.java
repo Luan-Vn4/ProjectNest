@@ -1,45 +1,60 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
+import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
+import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
+import br.upe.ProjectNest.domain.projetos.models.enums.Escopo;
 import br.upe.ProjectNest.domain.projetos.repositories.ProjetoRepository;
-import br.upe.ProjectNest.domain.usuarios.models.Usuario;
+import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ProjetoServiceImpl implements ProjetoService {
     private ProjetoRepository projetoRepository;
 
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+    private final ProjetoMapper projetoMapper;
+    private final UsuarioMapper usuarioMapper;
 
 
     @Override
-    public List<Projeto> getAll() {
-        return projetoRepository.findAll();
+    public List<ProjetoDTO> getAll() {
+        return projetoRepository.findAll().stream().map(projetoMapper::toDto).toList();
     }
 
     @Override
-    public Projeto getById(UUID id) {
-        return projetoRepository.findById(id).orElse(null);
+    public ProjetoDTO getById(UUID id) {
+        return projetoRepository.findById(id).map(projetoMapper::toDto).orElse(null);
     }
 
     @Override
-    public UUID save(ProjetoDTO projetoDTO) {
-//
-//        Usuario dono = usuarioService.getByUuid(projetoDTO.idDono());
-//        Projeto projeto = new Projeto();
-//        BeanUtils.copyProperties(projetoDTO, projeto);
-//        projeto.setDono(dono);
-//        System.out.println(projeto);
-        return null;
+    public ProjetoDTO save(ProjetoCreationDTO projetoDTO) {
+
+        Optional<UsuarioDTO> donoOpt = usuarioService.getByUuid(projetoDTO.idDono());
+
+        if (donoOpt.isEmpty()) {
+            throw new RuntimeException("Não foi possivel encontrar um usuário com id: " + projetoDTO.idDono());
+        }
+
+        UsuarioDTO dono = donoOpt.get();
+
+        Projeto projeto = projetoMapper.toEntity(projetoDTO);
+        projeto.setDono(usuarioMapper.toEntity(dono));
+        Projeto registeredProjeto = projetoRepository.save(projeto);
+
+        return projetoMapper.toDto(registeredProjeto);
+
     }
 
     @Override
@@ -49,13 +64,13 @@ public class ProjetoServiceImpl implements ProjetoService {
 
     @Override
     public void delete(UUID id) {
-        Projeto existingProjeto = getById(id);
+        ProjetoDTO existingProjeto = getById(id);
 
         if (existingProjeto == null) {
             throw new RuntimeException("Não foi encontrado nenhum projeto com id: " + id);
         }
 
-        projetoRepository.delete(existingProjeto);
+        projetoRepository.delete(projetoMapper.toEntity(existingProjeto));
 
     }
 }
