@@ -1,5 +1,6 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
+import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
 
@@ -8,11 +9,11 @@ import java.util.UUID;
 
 public interface ProjetoService {
 
-    public List<Projeto> getAll();
+    public List<ProjetoDTO> getAll();
 
-    public Projeto getById(UUID id);
+    public ProjetoDTO getById(UUID id);
 
-    public UUID save(ProjetoDTO projetoDTO);
+    public ProjetoDTO save(ProjetoCreationDTO projetoDTO);
 
     public void update(ProjetoDTO projetoDTO);
 
