@@ -1,6 +1,7 @@
 package br.upe.ProjectNest.domain.usuarios.dtos.registration;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -12,7 +13,7 @@ public record PessoaCreationDTO(
     String apelido,
     @NotNull @Size(max = 255) @Email
     String email,
-    @NotNull @Size(min = 60, max = 60)
+    @NotEmpty
     String senha,
     @NotNull @Size(max = 50)
     String nome,
