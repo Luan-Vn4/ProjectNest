@@ -1,10 +1,11 @@
 package br.upe.ProjectNest.domain.usuarios.controllers;
 
-import br.upe.ProjectNest.domain.common.pagination.PaginatedResult;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.registration.EmpresaCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.registration.PessoaCreationDTO;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -23,10 +24,16 @@ public class UsuarioController {
 
     UsuarioService usuarioService;
 
-    @PostMapping
-    public ResponseEntity<UsuarioDTO> register(@Valid @RequestBody UsuarioCreationDTO usuario) {
-        UsuarioDTO saved = usuarioService.registerUsuario(usuario);
-        return ResponseEntity.ok().body(saved);
+    @PostMapping("/pessoas")
+    public ResponseEntity<PessoaDTO> register(@Valid @RequestBody PessoaCreationDTO dto) {
+        PessoaDTO pessoaDTO = (PessoaDTO) usuarioService.registerUsuario(dto);
+        return ResponseEntity.ok().body(pessoaDTO);
+    }
+
+    @PostMapping("/empresas")
+    public ResponseEntity<EmpresaDTO> register(@Valid @RequestBody EmpresaCreationDTO dto) {
+        EmpresaDTO empresaDTO = (EmpresaDTO) usuarioService.registerUsuario(dto);
+        return ResponseEntity.ok().body(empresaDTO);
     }
 
     @GetMapping("/{uuid}")

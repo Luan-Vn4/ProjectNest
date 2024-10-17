@@ -1,6 +1,7 @@
 package br.upe.ProjectNest.domain.usuarios.dtos.fetch;
 
 import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +26,7 @@ public record PessoaDTO(
     String pronomes) implements UsuarioDTO {
 
     @Override
+    @JsonProperty
     public UsuarioType type() {
         return UsuarioType.PESSOA;
     }
