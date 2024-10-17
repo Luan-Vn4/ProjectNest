@@ -4,8 +4,9 @@ import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,13 +20,13 @@ public interface UsuarioService {
 
     Optional<UsuarioDTO> getByEmail(String email);
 
-    Page<UsuarioDTO> searchByApelido(String apelido, Pageable pageable);
+    PagedModel<UsuarioDTO> searchByApelido(String apelido, Pageable pageable);
 
-    Page<PessoaDTO> searchPessoaByApelido(String apelido, Pageable pageable);
+    PagedModel<PessoaDTO> searchPessoaByApelido(String apelido, Pageable pageable);
 
-    Page<EmpresaDTO> searchEmpresaByNome(String empresa, Pageable pageable);
+    PagedModel<EmpresaDTO> searchEmpresaByNome(String empresa, Pageable pageable);
 
-    Page<EmpresaDTO> getAllEmpresas(Pageable pageable);
+    PagedModel<EmpresaDTO> getAllEmpresas(Pageable pageable);
 
     Optional<EmpresaDTO> getEmpresaByCNPJ(String cnpj);
 
