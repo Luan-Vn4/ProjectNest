@@ -18,7 +18,7 @@ public class ProjetoController {
 
     private ProjetoService projetoService;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<ProjetoDTO>> getAll() {
         return ResponseEntity.ok().body(projetoService.getAll());
     }
@@ -32,18 +32,18 @@ public class ProjetoController {
         }
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ProjetoDTO> create(@Valid @RequestBody ProjetoCreationDTO projetoDTO) {
         return ResponseEntity.ok().body(projetoService.save(projetoDTO));
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity update(@Valid @RequestBody ProjetoDTO projetoDTO) {
         projetoService.update(projetoDTO);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable UUID id) {
         try {
             projetoService.delete(id);
