@@ -28,6 +28,23 @@ public class Pessoa extends Usuario {
     private @Nullable String pronomes;
 
     @Override
+    public void merge(Usuario usuario) {
+        super.merge(usuario);
+
+        if (!(usuario instanceof Pessoa pessoa)) return;
+
+        if (pessoa.getNome() != null && !pessoa.getNome().equals(getNome())) {
+            setNome(pessoa.getNome());
+        }
+        if (pessoa.getSobrenome() != null && !pessoa.getSobrenome().equals(getSobrenome())) {
+            setSobrenome(pessoa.getSobrenome());
+        }
+        if (pessoa.getPronomes() != null && !pessoa.getPronomes().equals(getPronomes())) {
+            setPronomes(pessoa.getPronomes());
+        }
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
             "uuid = " + getUuid() + ", " +

@@ -10,8 +10,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
@@ -42,26 +42,26 @@ public class UsuarioController {
         return ResponseEntity.ok(result.orElseThrow(EntityNotFoundException::new));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<UsuarioDTO>> searchByApelido(
+    @GetMapping(params = "apelido")
+    public ResponseEntity<PagedModel<UsuarioDTO>> searchByApelido(
         @PathParam("apelido") String apelido, Pageable pageable) {
         return ResponseEntity.ok(usuarioService.searchByApelido(apelido, pageable));
     }
 
-    @GetMapping("/pessoas/apelido/{apelido}")
-    public ResponseEntity<Page<PessoaDTO>> searchPessoaByApelido(@PathVariable("apelido") String apelido,
-                                                                 Pageable pageable) {
+    @GetMapping(value = "/pessoas", params = "apelido")
+    public ResponseEntity<PagedModel<PessoaDTO>> searchPessoaByApelido(@PathParam("apelido") String apelido,
+                                                                       Pageable pageable) {
         return ResponseEntity.ok(usuarioService.searchPessoaByApelido(apelido, pageable));
     }
 
     @GetMapping(value = "/empresas", params = "nome")
-    public ResponseEntity<Page<EmpresaDTO>> searchEmpresaByNome(@PathParam("nome") String nome,
+    public ResponseEntity<PagedModel<EmpresaDTO>> searchEmpresaByNome(@PathParam("nome") String nome,
                                                                 Pageable pageable) {
         return ResponseEntity.ok(usuarioService.searchEmpresaByNome(nome, pageable));
     }
 
     @GetMapping(value = "/empresas")
-    public ResponseEntity<Page<EmpresaDTO>> getAllEmpresas(Pageable pageable) {
+    public ResponseEntity<PagedModel<EmpresaDTO>> getAllEmpresas(Pageable pageable) {
         return ResponseEntity.ok(usuarioService.getAllEmpresas(pageable));
     }
 
@@ -71,9 +71,15 @@ public class UsuarioController {
         return ResponseEntity.ok(result.orElseThrow(EntityNotFoundException::new));
     }
 
-    @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody UsuarioDTO usuario) {
-        UsuarioDTO updated = usuarioService.update(usuario);
+    @PutMapping("/pessoas")
+    public ResponseEntity<PessoaDTO> updateUsuario(@Valid @RequestBody PessoaDTO usuario) {
+        PessoaDTO updated = usuarioService.update(usuario);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/empresas")
+    public ResponseEntity<EmpresaDTO> updateEmpresa(@Valid @RequestBody EmpresaDTO empresa) {
+        EmpresaDTO updated = usuarioService.update(empresa);
         return ResponseEntity.ok(updated);
     }
 

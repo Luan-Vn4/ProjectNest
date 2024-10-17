@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.UUID;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.DEDUCTION)
-@JsonSubTypes({@Type(EmpresaDTO.class), @Type(UsuarioDTO.class)})
+@JsonSubTypes({@Type(EmpresaDTO.class), @Type(PessoaDTO.class)})
 public interface UsuarioDTO {
 
     UsuarioType type();

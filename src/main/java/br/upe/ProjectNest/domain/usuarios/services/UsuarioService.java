@@ -31,7 +31,9 @@ public interface UsuarioService {
     Optional<EmpresaDTO> getEmpresaByCNPJ(String cnpj);
 
     // ATUALIZAÇÃO
-    UsuarioDTO update(UsuarioDTO dto);
+    PessoaDTO update(PessoaDTO dto);
+
+    EmpresaDTO update(EmpresaDTO dto);
 
     // DELEÇÃO
     void deleteUsuario(UUID uuid);

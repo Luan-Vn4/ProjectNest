@@ -6,10 +6,13 @@ import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationMapper;
+import br.upe.ProjectNest.domain.usuarios.models.Empresa;
+import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.domain.usuarios.repositories.EmpresaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.PessoaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -82,9 +85,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public UsuarioDTO update(UsuarioDTO dto) {
-        Usuario usuario = usuarioMapper.toEntity(dto);
-        return usuarioMapper.toDto(usuarioRepository.save(usuario));
+    public PessoaDTO update(PessoaDTO dto) {
+        Pessoa received = usuarioMapper.toEntity(dto);
+        Optional<Pessoa> queryResult = pessoaRepository.findById(dto.uuid());
+
+        if (queryResult.isEmpty()) throw new EntityNotFoundException(
+            "Não foi possível encontrar uma pessoa com o UID: " + dto.uuid());
+
+        Pessoa found = queryResult.get();
+        found.merge(received);
+
+        return usuarioMapper.toDto(usuarioRepository.saveAndFlush(found));
+    }
+
+    @Override
+    @Transactional
+    public EmpresaDTO update(EmpresaDTO dto) {
+        Empresa received = usuarioMapper.toEntity(dto);
+        Optional<Empresa> queryResult = empresaRepository.findById(dto.uuid());
+
+        if (queryResult.isEmpty()) throw new EntityNotFoundException(
+            "Não foi possível encontrar uma empresa com o UID: " + dto.uuid()
+        );
+
+        Empresa found = queryResult.get();
+        found.merge(received);
+
+        return usuarioMapper.toDto(usuarioRepository.saveAndFlush(found));
     }
 
     @Override
