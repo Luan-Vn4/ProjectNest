@@ -7,11 +7,13 @@ import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationMapper;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
+import br.upe.ProjectNest.domain.usuarios.repositories.EmpresaRepository;
+import br.upe.ProjectNest.domain.usuarios.repositories.PessoaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +28,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     UsuarioRepository usuarioRepository;
 
+    EmpresaRepository empresaRepository;
+
+    PessoaRepository pessoaRepository;
 
     @Override
     @Transactional
@@ -47,28 +52,32 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Page<UsuarioDTO> searchByApelido(String apelido, Pageable pageable) {
-        return usuarioRepository.searchByApelido(apelido, pageable).map(usuarioMapper::toDto);
+    public PagedModel<UsuarioDTO> searchByApelido(String apelido, Pageable pageable) {
+        return new PagedModel<>(
+            usuarioRepository.searchByApelidoContains(apelido, pageable).map(usuarioMapper::toDto));
     }
 
     @Override
-    public Page<PessoaDTO> searchPessoaByApelido(String apelido, Pageable pageable) {
-        return usuarioRepository.searchPessoaByApelido(apelido, pageable).map(usuarioMapper::toDto);
+    public PagedModel<PessoaDTO> searchPessoaByApelido(String apelido, Pageable pageable) {
+        return new PagedModel<>(
+            pessoaRepository.searchByApelidoContains(apelido, pageable).map(usuarioMapper::toDto));
     }
 
     @Override
-    public Page<EmpresaDTO> searchEmpresaByNome(String empresa, Pageable pageable) {
-        return usuarioRepository.searchEmpresaByNomeContains(empresa, pageable).map(usuarioMapper::toDto);
+    public PagedModel<EmpresaDTO> searchEmpresaByNome(String empresa, Pageable pageable) {
+        return new PagedModel<>(
+            empresaRepository.searchByApelidoContains(empresa, pageable).map(usuarioMapper::toDto));
     }
 
     @Override
-    public Page<EmpresaDTO> getAllEmpresas(Pageable pageable) {
-        return usuarioRepository.findAllEmpresas(pageable).map(usuarioMapper::toDto);
+    public PagedModel<EmpresaDTO> getAllEmpresas(Pageable pageable) {
+        return new PagedModel<>(
+            empresaRepository.findAll(pageable).map(usuarioMapper::toDto));
     }
 
     @Override
     public Optional<EmpresaDTO> getEmpresaByCNPJ(String cnpj) {
-        return usuarioRepository.findEmpresaByCNPJ(cnpj).map(value -> usuarioMapper.toDto(value));
+        return empresaRepository.findByCnpj(cnpj).map(value -> usuarioMapper.toDto(value));
     }
 
     @Override
