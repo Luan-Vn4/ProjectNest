@@ -1,6 +1,5 @@
 package br.upe.ProjectNest.infrastructure.security.tokens.services;
 
-import br.upe.ProjectNest.infrastructure.security.tokens.exceptions.TokenValidationException;
 import br.upe.ProjectNest.infrastructure.security.tokens.dtos.TokenDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

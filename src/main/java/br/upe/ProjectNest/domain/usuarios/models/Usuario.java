@@ -1,6 +1,7 @@
 package br.upe.ProjectNest.domain.usuarios.models;
 
 import br.upe.ProjectNest.domain.common.Mergeable;
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.RoleAssignment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -8,19 +9,21 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.proxy.HibernateProxy;
-
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@DynamicUpdate
 @Table(name="usuarios")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter @Setter @NoArgsConstructor
-public class Usuario implements Mergeable<Usuario> {
+public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
 
+    // ATRIBUTOS
     @Id
     @GeneratedValue(strategy= GenerationType.UUID)
     private UUID uuid;
@@ -37,6 +40,11 @@ public class Usuario implements Mergeable<Usuario> {
     @Column(name="senha", length=60, columnDefinition="bpchar(60)")
     private @NotNull String senha;
 
+    @OneToMany(mappedBy="usuario", orphanRemoval=true, cascade=CascadeType.ALL)
+    private @NotNull List<RoleAssignment> roleAssignments;
+
+
+    // MÉTODOS
     public void merge(Usuario usuario) {
         if (usuario.getApelido() != null && !usuario.getApelido().equals(getApelido())) {
             setApelido(usuario.getApelido());
@@ -47,6 +55,21 @@ public class Usuario implements Mergeable<Usuario> {
         if (usuario.getSenha() != null && !usuario.getSenha().equals(getSenha())) {
             setSenha(usuario.getSenha());
         }
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public String getPassword() {
+        return getSenha();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roleAssignments.stream().map(RoleAssignment::getRole).toList();
     }
 
     @Override
