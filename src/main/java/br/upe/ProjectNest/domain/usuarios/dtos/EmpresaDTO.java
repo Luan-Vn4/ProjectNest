@@ -1,18 +1,28 @@
-package br.upe.ProjectNest.domain.usuarios.dtos.registration;
+package br.upe.ProjectNest.domain.usuarios.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.UUID;
 
 /**
  * DTO for {@link br.upe.ProjectNest.domain.usuarios.models.Empresa}
  */
-public record EmpresaCreationDTO(
+public record EmpresaDTO (
+    @NotNull
+    UUID uuid,
     @NotNull @Size(max = 50)
     String apelido,
     @NotNull @Size(max = 255) @Email
     String email,
-    @NotNull
-    String senha,
     @NotNull @Size(max = 14)
-    String cnpj) implements UsuarioCreationDTO {}
+    String cnpj) implements UsuarioDTO {
+
+  @Override
+  @JsonProperty
+  public UsuarioType type() {
+    return UsuarioType.EMPRESA;
+  }
+
+}

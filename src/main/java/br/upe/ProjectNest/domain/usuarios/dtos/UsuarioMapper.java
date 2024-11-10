@@ -1,4 +1,4 @@
-package br.upe.ProjectNest.domain.usuarios.dtos.fetch;
+package br.upe.ProjectNest.domain.usuarios.dtos;
 
 import br.upe.ProjectNest.domain.usuarios.models.Empresa;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;

@@ -1,4 +1,4 @@
-package br.upe.ProjectNest.domain.usuarios.dtos.registration;
+package br.upe.ProjectNest.infrastructure.security.authentication.dtos.registration;
 
 import br.upe.ProjectNest.domain.usuarios.models.Empresa;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;

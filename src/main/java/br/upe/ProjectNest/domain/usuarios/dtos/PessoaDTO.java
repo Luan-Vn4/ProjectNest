@@ -1,6 +1,5 @@
-package br.upe.ProjectNest.domain.usuarios.dtos.fetch;
+package br.upe.ProjectNest.domain.usuarios.dtos;
 
-import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
