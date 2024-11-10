@@ -1,6 +1,8 @@
 package br.upe.ProjectNest.infrastructure.security.tokens.services;
 
 import br.upe.ProjectNest.infrastructure.security.tokens.dtos.TokenDTO;
+import br.upe.ProjectNest.infrastructure.security.tokens.exceptions.ExpiredTokenException;
+import br.upe.ProjectNest.infrastructure.security.tokens.exceptions.InvalidTokenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -19,9 +21,6 @@ import java.time.temporal.ChronoUnit;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
-
-    @Value("${projectnest.auth.jwt.secret}")
-    private String secret;
 
     @Value("${projectnest.auth.jwt.issuer}")
     private String issuer;
@@ -78,11 +77,9 @@ public class TokenService {
 
             return new TokenDTO(true, token, "Bearer", jwt.getSubject(), expiration);
         } catch (TokenExpiredException exception) {
-            throw new TokenExpiredException("Tokens cujas datas de validade estão expiradas não podem mais " +
-                "ser utilizados", exception.getExpiredOn());
+            throw new ExpiredTokenException(token, exception.getExpiredOn());
         } catch (JWTVerificationException exception) {
-            throw new JWTVerificationException("Token fornecido é inválido, pois possui credenciais " +
-                "incorretas", exception);
+            throw new InvalidTokenException(token, exception);
         }
     }
 
