@@ -3,6 +3,7 @@ package br.upe.ProjectNest.infrastructure.security.authentication.dtos.registrat
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 /**
  * DTO for {@link br.upe.ProjectNest.domain.usuarios.models.Empresa}
@@ -14,5 +15,5 @@ public record EmpresaCreationDTO(
     String email,
     @NotNull @Size(min = 6)
     String senha,
-    @NotNull @Size(max = 14)
+    @NotNull @Size(max = 14) @CNPJ
     String cnpj) implements UsuarioCreationDTO {}

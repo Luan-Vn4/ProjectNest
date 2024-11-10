@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CNPJ;
+
 import java.util.UUID;
 
 /**
@@ -16,7 +18,7 @@ public record EmpresaDTO (
     String apelido,
     @NotNull @Size(max = 255) @Email
     String email,
-    @NotNull @Size(max = 14)
+    @NotNull @Size(max = 14) @CNPJ
     String cnpj) implements UsuarioDTO {
 
   @Override

@@ -8,13 +8,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 @Entity
 @Table(name="empresas")
 @Getter @Setter @NoArgsConstructor
 public class Empresa extends Usuario {
 
-    @Size(max=14)
+    @Size(max=14) @CNPJ
     @Column(name="cnpj", length=14, updatable=false, unique=true)
     private @NotNull String cnpj;
 
