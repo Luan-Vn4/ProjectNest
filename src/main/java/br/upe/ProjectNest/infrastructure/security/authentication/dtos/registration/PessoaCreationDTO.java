@@ -13,7 +13,7 @@ public record PessoaCreationDTO(
     String apelido,
     @NotNull @Size(max = 255) @Email
     String email,
-    @NotEmpty
+    @NotEmpty @Size(min = 6)
     String senha,
     @NotNull @Size(max = 50)
     String nome,

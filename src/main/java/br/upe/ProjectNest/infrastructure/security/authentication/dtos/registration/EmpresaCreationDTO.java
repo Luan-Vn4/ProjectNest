@@ -12,7 +12,7 @@ public record EmpresaCreationDTO(
     String apelido,
     @NotNull @Size(max = 255) @Email
     String email,
-    @NotNull
+    @NotNull @Size(min = 6)
     String senha,
     @NotNull @Size(max = 14)
     String cnpj) implements UsuarioCreationDTO {}
