@@ -1,4 +1,4 @@
-package br.upe.ProjectNest.infrastructure.security.authentication.dtos.registration;
+package br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,9 +1,9 @@
 package br.upe.ProjectNest.domain.usuarios.services;
 
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.EmpresaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.PessoaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
+import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 

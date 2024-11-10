@@ -1,10 +1,8 @@
 package br.upe.ProjectNest.domain.usuarios.controllers;
 
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.EmpresaCreationDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.PessoaCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.EmpresaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.PessoaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -22,7 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UsuarioController {
 
-    UsuarioService usuarioService;
+    private UsuarioService usuarioService;
 
     @PostMapping("/pessoas")
     public ResponseEntity<PessoaDTO> register(@Valid @RequestBody PessoaCreationDTO dto) {

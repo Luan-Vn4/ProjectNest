@@ -1,17 +1,17 @@
 package br.upe.ProjectNest.domain.usuarios.services;
 
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationMapper;
+import br.upe.ProjectNest.domain.usuarios.dtos.EmpresaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.PessoaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioMapper;
 import br.upe.ProjectNest.domain.usuarios.models.Empresa;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.domain.usuarios.repositories.EmpresaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.PessoaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
+import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
+import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -25,15 +25,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    UsuarioMapper usuarioMapper;
+    private UsuarioMapper usuarioMapper;
 
-    UsuarioCreationMapper usuarioCreationMapper;
+    private UsuarioCreationMapper usuarioCreationMapper;
 
-    UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
-    EmpresaRepository empresaRepository;
+    private EmpresaRepository empresaRepository;
 
-    PessoaRepository pessoaRepository;
+    private PessoaRepository pessoaRepository;
 
     @Override
     @Transactional

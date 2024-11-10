@@ -8,8 +8,8 @@ import br.upe.ProjectNest.domain.contribuicoes.repositories.ContribuicaoReposito
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
 import br.upe.ProjectNest.domain.projetos.services.ProjetoService;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioMapper;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
