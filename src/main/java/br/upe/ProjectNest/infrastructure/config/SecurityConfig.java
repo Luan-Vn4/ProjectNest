@@ -3,6 +3,7 @@ package br.upe.ProjectNest.infrastructure.config;
 import br.upe.ProjectNest.infrastructure.exceptionhandlers.FilterExceptionHandler;
 import br.upe.ProjectNest.infrastructure.security.tokens.services.TokenFilter;
 import com.auth0.jwt.algorithms.Algorithm;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,14 +25,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled=true)
+@AllArgsConstructor
 public class SecurityConfig {
 
-    private TokenFilter tokenFilter;
-
-    private FilterExceptionHandler filterExceptionHandler;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   FilterExceptionHandler filterExceptionHandler,
+                                                   TokenFilter tokenFilter) throws Exception {
         http.authorizeHttpRequests(handler -> handler
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
