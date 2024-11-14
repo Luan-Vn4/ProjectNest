@@ -12,6 +12,8 @@ import br.upe.ProjectNest.domain.usuarios.repositories.PessoaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationMapper;
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
+import br.upe.ProjectNest.infrastructure.security.authentication.services.roles.RoleService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -35,10 +38,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private PessoaRepository pessoaRepository;
 
+    private RoleService roleService;
+
     @Override
-    @Transactional
-    public UsuarioDTO registerUsuario(UsuarioCreationDTO dto) {
+    @Transactional(rollbackOn = Exception.class)
+    public UsuarioDTO create(UsuarioCreationDTO dto) {
         Usuario usuario = usuarioCreationMapper.toEntity(dto);
+
+        Set<Role> defaultRoles = roleService.getByNames(Role.defaultRoles.get(usuario.getClass()));
+        usuario.addRoles(defaultRoles);
+
         return usuarioMapper.toDto(usuarioRepository.save(usuario));
     }
 
@@ -116,7 +125,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public void deleteUsuario(UUID uuid) {
+    public void delete(UUID uuid) {
         usuarioRepository.deleteById(uuid);
     }
 

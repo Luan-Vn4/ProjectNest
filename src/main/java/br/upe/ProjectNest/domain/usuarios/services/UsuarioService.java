@@ -6,14 +6,13 @@ import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
-
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UsuarioService {
 
     // REGISTRO
-    UsuarioDTO registerUsuario(UsuarioCreationDTO dto);
+    UsuarioDTO create(UsuarioCreationDTO dto);
 
     // BUSCA
     Optional<UsuarioDTO> getByUuid(UUID uuid);
@@ -36,6 +35,6 @@ public interface UsuarioService {
     EmpresaDTO update(EmpresaDTO dto);
 
     // DELEÇÃO
-    void deleteUsuario(UUID uuid);
+    void delete(UUID uuid);
 
 }
