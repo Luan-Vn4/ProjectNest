@@ -1,14 +1,15 @@
 package br.upe.ProjectNest.domain.usuarios.models;
 
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name="pessoas")
@@ -26,6 +27,15 @@ public class Pessoa extends Usuario {
     @Size(max=25)
     @Column(name="pronomes", length=25)
     private @Nullable String pronomes;
+
+    @Builder
+    public Pessoa(UUID uuid, String apelido, String email, String senha, Set<Role> roles,
+                  String nome, String sobrenome, @Nullable String pronomes) {
+        super(uuid, apelido, email, senha, roles);
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.pronomes = pronomes;
+    }
 
     @Override
     public void merge(Usuario usuario) {

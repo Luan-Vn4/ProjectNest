@@ -1,26 +1,22 @@
 package br.upe.ProjectNest.domain.usuarios.models;
 
 import br.upe.ProjectNest.domain.common.Mergeable;
-import br.upe.ProjectNest.infrastructure.security.authentication.authorities.RoleAssignment;
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name="usuarios")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
 
     // ATRIBUTOS
@@ -40,9 +36,14 @@ public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
     @Column(name="senha", length=60, columnDefinition="bpchar(60)")
     private @NotNull String senha;
 
-    @OneToMany(mappedBy="usuario", orphanRemoval=true, cascade=CascadeType.ALL)
-    private @NotNull List<RoleAssignment> roleAssignments;
-
+    @Getter(AccessLevel.PRIVATE)
+    @ManyToMany(cascade=CascadeType.REFRESH)
+    @JoinTable(
+        name="usuarios_roles",
+        joinColumns=@JoinColumn(name="uuid_usuario"),
+        inverseJoinColumns=@JoinColumn(name="id_role")
+    )
+    private @NotNull Set<Role> roles = new HashSet<>();
 
     // MÉTODOS
     public void merge(Usuario usuario) {
@@ -69,7 +70,17 @@ public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roleAssignments.stream().map(RoleAssignment::getRole).toList();
+        return roles.stream()
+            .flatMap(x -> Stream.concat(Stream.of(x), x.getPrivileges().stream()))
+            .toList();
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
+    public void addRoles(Collection<Role> roles) {
+        this.roles.addAll(roles);
     }
 
     @Override
