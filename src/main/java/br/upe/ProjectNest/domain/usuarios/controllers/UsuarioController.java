@@ -22,17 +22,6 @@ public class UsuarioController {
 
     private UsuarioService usuarioService;
 
-    @PostMapping("/pessoas")
-    public ResponseEntity<PessoaDTO> register(@Valid @RequestBody PessoaCreationDTO dto) {
-        PessoaDTO pessoaDTO = (PessoaDTO) usuarioService.registerUsuario(dto);
-        return ResponseEntity.ok().body(pessoaDTO);
-    }
-
-    @PostMapping("/empresas")
-    public ResponseEntity<EmpresaDTO> register(@Valid @RequestBody EmpresaCreationDTO dto) {
-        EmpresaDTO empresaDTO = (EmpresaDTO) usuarioService.registerUsuario(dto);
-        return ResponseEntity.ok().body(empresaDTO);
-    }
 
     @GetMapping("/{uuid}")
     public ResponseEntity<UsuarioDTO> getBtUuid(@PathVariable UUID uuid) {
@@ -69,6 +58,7 @@ public class UsuarioController {
         return ResponseEntity.ok(result.orElseThrow(EntityNotFoundException::new));
     }
 
+
     @PutMapping("/pessoas")
     public ResponseEntity<PessoaDTO> updateUsuario(@Valid @RequestBody PessoaDTO usuario) {
         PessoaDTO updated = usuarioService.update(usuario);
@@ -80,12 +70,5 @@ public class UsuarioController {
         EmpresaDTO updated = usuarioService.update(empresa);
         return ResponseEntity.ok(updated);
     }
-
-    @DeleteMapping("/{uuid}")
-    public ResponseEntity<?> delete(@PathVariable("uuid") UUID uuid) {
-        usuarioService.deleteUsuario(uuid);
-        return ResponseEntity.ok().build();
-    }
-
 
 }
