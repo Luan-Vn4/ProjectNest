@@ -3,14 +3,15 @@ package br.upe.ProjectNest.domain.contribuicoes.models.DTOs;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Set;
 import java.util.UUID;
 
 public record ContribuicaoDTO(
-        @NotNull
+        @NotNull()
         UUID uuid,
 
         @NotNull
-        UUID idUsuario,
+        Set<UUID> idUsuarios,
 
         @NotNull
         UUID idProjeto,

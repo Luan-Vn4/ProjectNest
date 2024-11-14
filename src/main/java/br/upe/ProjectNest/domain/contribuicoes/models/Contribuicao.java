@@ -7,19 +7,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "contribuicoes")
-@NoArgsConstructor @Getter @Setter
+@NoArgsConstructor
+@Getter
+@Setter
 public class Contribuicao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
 
-    @ManyToOne()
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    @ManyToMany()
+    @JoinTable(name = "contribuicoes_usuarios", joinColumns = @JoinColumn(name = "id_contribuicao"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
+    private Set<Usuario> usuarios = new HashSet<>();
 
     @ManyToOne()
     @JoinColumn(name = "id_projeto", nullable = false)
@@ -33,4 +38,12 @@ public class Contribuicao {
 
     @Column(name = "url_repositorio", unique = true)
     private String urlRepositorio;
+
+    public void addUsuario(Usuario usuario) {
+        usuarios.add(usuario);
+    }
+
+    public void addUsuarios(Set<Usuario> novosUsuarios) {
+        this.usuarios.addAll(novosUsuarios);
+    }
 }
