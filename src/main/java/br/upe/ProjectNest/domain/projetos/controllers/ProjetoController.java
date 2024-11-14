@@ -53,14 +53,4 @@ public class ProjetoController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Projeto> update(@RequestBody Projeto projeto) {
-        try {
-            projetoService.update(projeto);
-            return ResponseEntity.ok().body(projeto);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
 }
