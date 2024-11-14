@@ -1,15 +1,15 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
+import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
+import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
 import br.upe.ProjectNest.domain.projetos.repositories.ProjetoRepository;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
-import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,59 +21,72 @@ import java.util.UUID;
 public class ProjetoServiceImpl implements ProjetoService {
     private ProjetoRepository projetoRepository;
 
-    private UsuarioService usuarioService;
-    private UsuarioMapper usuarioMapper;
+    private final UsuarioService usuarioService;
+    private final ProjetoMapper projetoMapper;
+    private final UsuarioMapper usuarioMapper;
+
 
     @Override
-    public List<Projeto> getAll() {
-        return projetoRepository.findAll();
+    public List<ProjetoDTO> getAll() {
+        return projetoRepository.findAll().stream().map(projetoMapper::toDto).toList();
     }
 
     @Override
-    public Projeto getById(UUID id) {
-        Optional<Projeto> projeto = projetoRepository.findById(id);
+    public ProjetoDTO getById(UUID id) {
+        return projetoRepository.findById(id).map(projetoMapper::toDto).orElse(null);
+    }
 
-        if (projeto.isEmpty()) {
+    @Override
+    public ProjetoDTO save(ProjetoCreationDTO projetoDTO) {
+
+        Optional<UsuarioDTO> donoOpt = usuarioService.getByUuid(projetoDTO.idDono());
+
+        if (donoOpt.isEmpty()) {
+            throw new RuntimeException("Não foi possivel encontrar um usuário com id: " + projetoDTO.idDono());
+        }
+
+        UsuarioDTO dono = donoOpt.get();
+
+        Projeto projeto = projetoMapper.toEntity(projetoDTO);
+        projeto.setDono(usuarioMapper.toEntity(dono));
+        Projeto registeredProjeto = projetoRepository.save(projeto);
+
+        return projetoMapper.toDto(registeredProjeto);
+
+    }
+
+    @Override
+    @Transactional
+    public void update(ProjetoDTO projetoDTO) {
+        Projeto existingProjeto = projetoRepository.findById(projetoDTO.uuid()).orElseThrow(() ->
+                new RuntimeException("Não foi possível encontrar um projeto com id: " + projetoDTO.uuid())
+        );
+
+        if (!existingProjeto.getDono().getUuid().equals(projetoDTO.idDono())) {
+            UsuarioDTO novoUsuario = usuarioService.getByUuid(projetoDTO.idDono())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + projetoDTO.idDono()));
+            existingProjeto.setDono(usuarioMapper.toEntity(novoUsuario));
+        }
+
+        existingProjeto.setTitulo(projetoDTO.titulo());
+        existingProjeto.setDescricao(projetoDTO.descricao());
+        existingProjeto.setUrlRepositorio(projetoDTO.urlRepositorio());
+        existingProjeto.setEscopo(projetoDTO.escopo());
+        existingProjeto.setStatus(projetoDTO.status());
+
+        projetoRepository.save(existingProjeto);
+    }
+
+
+    @Override
+    public void delete(UUID id) {
+        ProjetoDTO existingProjeto = getById(id);
+
+        if (existingProjeto == null) {
             throw new RuntimeException("Não foi encontrado nenhum projeto com id: " + id);
         }
 
-        return projeto.get();
-    }
-
-    @Override
-    @Transactional
-    public UUID save(ProjetoDTO projetoDTO) {
-
-        Optional<UsuarioDTO> donoOptional = usuarioService.getByUuid(projetoDTO.idDono());
-        if (donoOptional.isEmpty()) {
-            throw new RuntimeException("Dono do projeto não encontrado. Id: " + projetoDTO.idDono());
-        }
-
-        Projeto projeto = new Projeto();
-        UsuarioDTO donoDTO = donoOptional.get();
-        Usuario dono = usuarioMapper.toEntity(donoDTO);
-        BeanUtils.copyProperties(projetoDTO, projeto);
-        projeto.setDono(dono);
-
-        Projeto projetoSalvo = projetoRepository.save(projeto);
-        return projetoSalvo.getUuid();
-    }
-
-    @Override
-    @Transactional
-    public Projeto update(Projeto projeto) {
-        getById(projeto.getUuid());
-
-        return projetoRepository.save(projeto);
-    }
-
-    @Override
-    @Transactional
-    public void delete(UUID id) {
-        Projeto ProjetoExistente = getById(id);
-
-
-        projetoRepository.delete(ProjetoExistente);
+        projetoRepository.delete(projetoMapper.toEntity(existingProjeto));
 
     }
 }
