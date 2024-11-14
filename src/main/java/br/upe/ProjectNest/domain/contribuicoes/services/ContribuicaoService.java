@@ -7,6 +7,7 @@ import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import java.util.List;
 import java.util.UUID;
 
+
 public interface ContribuicaoService {
 
     public List<ContribuicaoDTO> getAll();

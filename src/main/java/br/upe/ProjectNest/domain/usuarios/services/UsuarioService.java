@@ -4,10 +4,12 @@ import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface UsuarioService {
@@ -37,5 +39,7 @@ public interface UsuarioService {
 
     // DELEÇÃO
     void deleteUsuario(UUID uuid);
+
+    Set<UsuarioDTO> findUsuariosByUUIDs(Set<UUID> uuids);
 
 }

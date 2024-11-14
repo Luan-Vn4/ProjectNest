@@ -1,22 +1,29 @@
 package br.upe.ProjectNest.domain.contribuicoes.services;
 
+import br.upe.ProjectNest.domain.contribuicoes.exceptions.ContribuicaoExistsException;
+import br.upe.ProjectNest.domain.contribuicoes.exceptions.ContribuicaoNotFoundException;
 import br.upe.ProjectNest.domain.contribuicoes.models.Contribuicao;
 import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoCreationDTO;
 import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoMapper;
 import br.upe.ProjectNest.domain.contribuicoes.repositories.ContribuicaoRepository;
+import br.upe.ProjectNest.domain.projetos.exceptions.ProjetoNotFoundException;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
 import br.upe.ProjectNest.domain.projetos.services.ProjetoService;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioMapper;
+import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -38,31 +45,35 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
 
     @Override
     public ContribuicaoDTO getById(UUID id) {
-        Contribuicao contribuicao = contribuicaoRepository.findById(id).orElse(null);
-
-        if (contribuicao == null) {
-            throw new RuntimeException("Não foi possivel encontrar uma contribuição com id: " + id);
-        }
-
+        Contribuicao contribuicao = contribuicaoRepository.findById(id).orElseThrow(() -> new ContribuicaoNotFoundException(id));
         return contribuicaoMapper.toDto(contribuicao);
     }
 
     @Override
     @Transactional
     public ContribuicaoDTO save(ContribuicaoCreationDTO contribuicaoDTO) {
-        UsuarioDTO existingUsuario = usuarioService.getByUuid(contribuicaoDTO.idUsuario()).orElse(null);
+        Set<Usuario> existingUsuarios = usuarioService.findUsuariosByUUIDs(contribuicaoDTO.idUsuarios())
+                .stream().map(usuarioMapper::toEntity).collect(Collectors.toSet());
+
+        if (contribuicaoDTO.idUsuarios().size() != existingUsuarios.size())
+            throw new RuntimeException("Há ao menos um usuário com id inválido.");
+
+        if (existingUsuarios.isEmpty() || contribuicaoDTO.idUsuarios().isEmpty())
+            throw new RuntimeException("É necessário existir ao menos um usuário");
+
         ProjetoDTO existingProjeto = projetoService.getById(contribuicaoDTO.idProjeto());
 
-        if (existingUsuario == null) {
-            throw new RuntimeException("Não foi possivel encontrar um usuário com id: " + contribuicaoDTO.idUsuario());
-        }
+        Optional<Contribuicao> existingContribuicao = contribuicaoRepository.findByUrlRepositorio(contribuicaoDTO.urlRepositorio());
+
+        if (!existingContribuicao.isEmpty())
+            throw new ContribuicaoExistsException("url", contribuicaoDTO.urlRepositorio());
 
         if (existingProjeto == null) {
-            throw new RuntimeException("Não foi possivel encontrar um projeto com id: " + contribuicaoDTO.idProjeto());
+            throw new ProjetoNotFoundException(contribuicaoDTO.idProjeto());
         }
 
         Contribuicao contribuicao = contribuicaoMapper.toEntity(contribuicaoDTO);
-        contribuicao.setUsuario(usuarioMapper.toEntity(existingUsuario));
+        contribuicao.addUsuarios(existingUsuarios);
         contribuicao.setProjeto(projetoMapper.toEntity(existingProjeto));
 
         return contribuicaoMapper.toDto(contribuicaoRepository.save(contribuicao));
@@ -73,13 +84,11 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
     @Transactional
     public void update(ContribuicaoDTO contribuicaoDTO) {
         Contribuicao existingContribuicao = contribuicaoRepository.findById(contribuicaoDTO.uuid()).orElseThrow(() ->
-                new RuntimeException("Não foi possivel encontrar uma contribuicao com id: " + contribuicaoDTO.uuid())
-        );
+                new ContribuicaoNotFoundException(contribuicaoDTO.uuid()));
 
-        if (!existingContribuicao.getUsuario().getUuid().equals(contribuicaoDTO.idUsuario())) {
-            UsuarioDTO novoUsuario = usuarioService.getByUuid(contribuicaoDTO.idUsuario())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + contribuicaoDTO.idUsuario()));
-            existingContribuicao.setUsuario(usuarioMapper.toEntity(novoUsuario));
+        if (!existingContribuicao.getUuid().equals(contribuicaoDTO.idUsuarios())) {
+            Set<UsuarioDTO> novosUsuarios = usuarioService.findUsuariosByUUIDs(contribuicaoDTO.idUsuarios());
+            existingContribuicao.addUsuarios(novosUsuarios.stream().map(usuarioMapper::toEntity).collect(Collectors.toSet()));
         }
 
         if (!existingContribuicao.getProjeto().getUuid().equals(contribuicaoDTO.idProjeto())) {
@@ -98,10 +107,6 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
     @Transactional
     public void delete(UUID id) {
         ContribuicaoDTO existingContribuicao = getById(id);
-
-        if (existingContribuicao == null) {
-            throw new RuntimeException("Não foi possivel encontrar uma contribuicao com id: " + id);
-        }
 
         contribuicaoRepository.delete(contribuicaoMapper.toEntity(existingContribuicao));
     }

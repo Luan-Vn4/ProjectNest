@@ -20,8 +20,4 @@ public class ProjetoAdvice {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> unknownError(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Algo inesperado aconteceu. Tente novamente mais tarde!");
-    }
 }
