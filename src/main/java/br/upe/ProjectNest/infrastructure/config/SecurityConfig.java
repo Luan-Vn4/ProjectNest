@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import static org.springframework.http.HttpMethod.POST;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,6 +34,8 @@ public class SecurityConfig {
                                                    FilterExceptionHandler filterExceptionHandler,
                                                    TokenFilter tokenFilter) throws Exception {
         http.authorizeHttpRequests(handler -> handler
+                .requestMatchers(POST, "/api/v1/auth/login").permitAll()
+                .requestMatchers(POST, "/api/v1/auth/usuarios/*").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
