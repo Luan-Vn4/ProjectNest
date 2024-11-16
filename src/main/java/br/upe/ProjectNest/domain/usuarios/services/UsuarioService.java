@@ -7,6 +7,7 @@ import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.regist
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface UsuarioService {
@@ -36,5 +37,7 @@ public interface UsuarioService {
 
     // DELEÇÃO
     void delete(UUID uuid);
+
+    Set<UsuarioDTO> findUsuariosByUUIDs(Set<UUID> uuids);
 
 }

@@ -7,16 +7,17 @@ import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import java.util.List;
 import java.util.UUID;
 
+
 public interface ContribuicaoService {
 
-    public List<ContribuicaoDTO> getAll();
+    List<ContribuicaoDTO> getAll();
 
-    public ContribuicaoDTO getById(UUID id);
+    ContribuicaoDTO getById(UUID id);
 
-    public ContribuicaoDTO save(ContribuicaoCreationDTO contribuicaoDTO);
+    ContribuicaoDTO save(ContribuicaoCreationDTO contribuicaoDTO);
 
-    public void update(ContribuicaoDTO contribuicaoDTO);
+    void update(ContribuicaoDTO contribuicaoDTO);
 
-    public void delete(UUID id);
+    void delete(UUID id);
 
 }

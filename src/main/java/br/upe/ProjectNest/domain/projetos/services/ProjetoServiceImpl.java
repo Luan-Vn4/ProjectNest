@@ -1,5 +1,7 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
+import br.upe.ProjectNest.domain.projetos.exceptions.ProjetoExistsException;
+import br.upe.ProjectNest.domain.projetos.exceptions.ProjetoNotFoundException;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
@@ -33,7 +35,7 @@ public class ProjetoServiceImpl implements ProjetoService {
 
     @Override
     public ProjetoDTO getById(UUID id) {
-        return projetoRepository.findById(id).map(projetoMapper::toDto).orElse(null);
+        return projetoRepository.findById(id).map(projetoMapper::toDto).orElseThrow(() -> new ProjetoNotFoundException(id));
     }
 
     @Override
@@ -44,6 +46,10 @@ public class ProjetoServiceImpl implements ProjetoService {
         if (donoOpt.isEmpty()) {
             throw new RuntimeException("Não foi possivel encontrar um usuário com id: " + projetoDTO.idDono());
         }
+
+        Optional<Projeto> existingProjeto = projetoRepository.findByUrlRepositorio(projetoDTO.urlRepositorio());
+
+        if (!existingProjeto.isEmpty()) throw new ProjetoExistsException("url", projetoDTO.urlRepositorio());
 
         UsuarioDTO dono = donoOpt.get();
 
@@ -59,7 +65,7 @@ public class ProjetoServiceImpl implements ProjetoService {
     @Transactional
     public void update(ProjetoDTO projetoDTO) {
         Projeto existingProjeto = projetoRepository.findById(projetoDTO.uuid()).orElseThrow(() ->
-                new RuntimeException("Não foi possível encontrar um projeto com id: " + projetoDTO.uuid())
+                new ProjetoNotFoundException(projetoDTO.uuid())
         );
 
         if (!existingProjeto.getDono().getUuid().equals(projetoDTO.idDono())) {
@@ -83,7 +89,7 @@ public class ProjetoServiceImpl implements ProjetoService {
         ProjetoDTO existingProjeto = getById(id);
 
         if (existingProjeto == null) {
-            throw new RuntimeException("Não foi encontrado nenhum projeto com id: " + id);
+            throw new ProjetoNotFoundException(id);
         }
 
         projetoRepository.delete(projetoMapper.toEntity(existingProjeto));

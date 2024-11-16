@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -129,4 +130,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioRepository.deleteById(uuid);
     }
 
+    @Override
+    public Set<UsuarioDTO> findUsuariosByUUIDs(Set<UUID> uuids) {
+        return usuarioRepository.findByUuidIn(uuids).stream().map(usuarioMapper::toDto).collect(Collectors.toSet());
+    }
 }
