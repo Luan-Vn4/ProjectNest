@@ -1,7 +1,6 @@
 package br.upe.ProjectNest.domain.common.exceptions.handlers;
 
 import br.upe.ProjectNest.domain.common.exceptions.ExceptionBody;
-import br.upe.ProjectNest.domain.common.utils.JsonUtils;
 import br.upe.ProjectNest.domain.common.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
@@ -32,7 +31,7 @@ public class GlobalExceptionHandler {
         var response = ExceptionBody.builder()
             .httpStatus(HttpStatus.BAD_REQUEST.value())
             .error("Dados inválidos")
-            .message(JsonUtils.toPrettyJson(errors))
+            .message(errors.toString())
             .request(RequestUtils.getFullRequestURL(req))
             .timeStamp(Instant.now())
             .build();

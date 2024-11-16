@@ -10,7 +10,7 @@ public class RequestUtils {
      * @return url e seus parâmetros
      */
     public static String getFullRequestURL(HttpServletRequest request) {
-        return request.getRequestURL() + "?" + request.getQueryString();
+        return request.getRequestURL() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
     }
 
 }
