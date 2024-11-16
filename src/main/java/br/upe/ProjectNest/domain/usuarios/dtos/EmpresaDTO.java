@@ -18,8 +18,10 @@ public record EmpresaDTO (
     String apelido,
     @NotNull @Size(max = 255) @Email
     String email,
-    @NotNull @Size(max = 14) @CNPJ
-    String cnpj) implements UsuarioDTO {
+    @NotNull @CNPJ
+    String cnpj,
+    @NotNull
+    Set<String> roles) implements UsuarioDTO {
 
   @Override
   @JsonProperty

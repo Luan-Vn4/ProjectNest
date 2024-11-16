@@ -17,5 +17,5 @@ public record EmpresaCreationDTO(
     String email,
     @NotNull @Size(min = 6)
     String senha,
-    @NotNull @Size(max = 14) @CNPJ
+    @NotNull @CNPJ
     String cnpj) implements UsuarioCreationDTO {}
