@@ -23,7 +23,7 @@ public record PessoaDTO(
     @NotNull @Size(max = 50)
     String sobrenome,
     @NotNull
-    Set<Role> roles,
+    Set<String> roles,
     @Size(max = 25)
     String pronomes) implements UsuarioDTO {
 

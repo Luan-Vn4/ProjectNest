@@ -3,7 +3,10 @@ package br.upe.ProjectNest.domain.usuarios.dtos;
 import br.upe.ProjectNest.domain.usuarios.models.Empresa;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
 import org.mapstruct.*;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UsuarioMapper {
@@ -18,6 +21,16 @@ public interface UsuarioMapper {
         if (usuario instanceof Pessoa) return toDto((Pessoa) usuario);
         if (usuario instanceof Empresa) return toDto((Empresa) usuario);
         throw new ClassCastException("A classe " + usuario.getClass() + " não é suportada");
+    }
+
+    default Set<String> mapRolesToStrings(Set<Role> roles) {
+        if (roles == null) return Set.of();
+
+        return roles.stream().map(Role::getName).collect(Collectors.toSet());
+    }
+
+    default Set<Role> mapStringsToRoles(Set<String> roles) {
+        return Set.of();
     }
 
     Pessoa toEntity(PessoaDTO pessoaDTO);

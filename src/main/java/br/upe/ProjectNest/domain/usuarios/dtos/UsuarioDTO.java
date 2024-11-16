@@ -3,7 +3,7 @@ package br.upe.ProjectNest.domain.usuarios.dtos;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
+import java.util.Set;
 import java.util.UUID;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.DEDUCTION)
@@ -17,5 +17,7 @@ public interface UsuarioDTO {
     String apelido();
 
     String email();
+
+    Set<String> roles();
 
 }
