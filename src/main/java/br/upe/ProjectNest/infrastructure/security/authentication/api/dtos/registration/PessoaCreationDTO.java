@@ -1,5 +1,6 @@
 package br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 /**
  * DTO for {@link br.upe.ProjectNest.domain.usuarios.models.Pessoa}
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public record PessoaCreationDTO(
     @NotNull @Size(max = 50)
     String apelido,
