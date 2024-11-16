@@ -19,8 +19,8 @@ import java.util.UUID;
 @Getter @Setter @NoArgsConstructor
 public class Empresa extends Usuario {
 
-    @Size(max=14) @CNPJ
-    @Column(name="cnpj", length=14, updatable=false, unique=true)
+    @CNPJ
+    @Column(name="cnpj", length=18, updatable=false, unique=true)
     private @NotNull String cnpj;
 
     @Builder
