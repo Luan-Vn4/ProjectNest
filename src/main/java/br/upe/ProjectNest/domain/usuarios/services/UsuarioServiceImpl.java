@@ -13,6 +13,7 @@ import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationMapper;
 import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.RoleNames;
 import br.upe.ProjectNest.infrastructure.security.authentication.services.roles.RoleService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -42,11 +43,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     private RoleService roleService;
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public UsuarioDTO create(UsuarioCreationDTO dto) {
         Usuario usuario = usuarioCreationMapper.toEntity(dto);
 
-        Set<Role> defaultRoles = roleService.getByNames(Role.defaultRoles.get(usuario.getClass()));
+        Set<Role> defaultRoles = roleService.getByNames(RoleNames.defaultRoles.get(usuario.getClass()));
         usuario.addRoles(defaultRoles);
 
         return usuarioMapper.toDto(usuarioRepository.save(usuario));

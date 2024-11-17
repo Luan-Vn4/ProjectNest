@@ -3,7 +3,7 @@ package br.upe.ProjectNest.domain.usuarios.repositories;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.infrastructure.TestConfig;
-import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
+import br.upe.ProjectNest.infrastructure.security.authentication.authorities.RoleNames;
 import br.upe.ProjectNest.infrastructure.security.authentication.repositories.RoleRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +41,7 @@ public class UsuarioRepositoryTest {
             .pronomes("Ele/Dele")
             .nome("Luan")
             .sobrenome("Vilaça")
-            .roles(roleRepository.findByNameIn(Role.defaultRoles.get(Pessoa.class)))
+            .roles(roleRepository.findByNameIn(RoleNames.defaultRoles.get(Pessoa.class)))
             .build();
 
         Usuario created = usuarioRepository.saveAndFlush(usuario);
