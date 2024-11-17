@@ -1,4 +1,4 @@
-package br.upe.ProjectNest.infrastructure.exceptionhandlers;
+package br.upe.ProjectNest.infrastructure.exception;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;

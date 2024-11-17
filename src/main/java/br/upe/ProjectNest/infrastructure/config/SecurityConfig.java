@@ -1,6 +1,6 @@
 package br.upe.ProjectNest.infrastructure.config;
 
-import br.upe.ProjectNest.infrastructure.exceptionhandlers.FilterExceptionHandler;
+import br.upe.ProjectNest.infrastructure.exception.FilterExceptionHandler;
 import br.upe.ProjectNest.infrastructure.security.tokens.services.TokenFilter;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.AllArgsConstructor;

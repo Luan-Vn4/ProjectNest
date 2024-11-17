@@ -44,6 +44,7 @@ public class TokenFilter extends OncePerRequestFilter {
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        filterChain.doFilter(request, response);
     }
 
     private Optional<String> extractToken(@Nonnull HttpServletRequest request) {
