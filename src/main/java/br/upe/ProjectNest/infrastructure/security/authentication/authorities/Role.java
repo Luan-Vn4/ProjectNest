@@ -1,16 +1,15 @@
 package br.upe.ProjectNest.infrastructure.security.authentication.authorities;
 
-import br.upe.ProjectNest.domain.usuarios.models.Empresa;
-import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Immutable;
 import org.springframework.security.core.GrantedAuthority;
-import java.util.Map;
 import java.util.Set;
 
 @Immutable @Entity
@@ -36,26 +35,8 @@ public class Role implements GrantedAuthority {
         joinColumns=@JoinColumn(name="id_role"),
         inverseJoinColumns=@JoinColumn(name="id_privilege")
     )
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Privilege> privileges;
-
-
-    // CONSTANTES
-    @Transient
-    public static final String PESSOA = "ROLE_PESSOA";
-
-    @Transient
-    public static final String EMPRESA = "ROLE_EMPRESA";
-
-    @Transient
-    public static final String ADMIN = "ROLE_ADMIN";
-
-    /**
-     * Roles padrões, segundo o tipo de usuário
-     */
-    public static final Map<Class<? extends Usuario>, Set<String>> defaultRoles = Map.of(
-        Pessoa.class, Set.of(Role.PESSOA),
-        Empresa.class, Set.of(Role.EMPRESA)
-    );
 
 
     // MÉTODOS

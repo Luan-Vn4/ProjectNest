@@ -2,11 +2,14 @@ package br.upe.ProjectNest.domain.usuarios.models;
 
 import br.upe.ProjectNest.domain.common.Mergeable;
 import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +19,7 @@ import java.util.stream.Stream;
 @Entity
 @Table(name="usuarios")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor
 public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
 
     // ATRIBUTOS
@@ -36,14 +39,23 @@ public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
     @Column(name="senha", length=60, columnDefinition="bpchar(60)")
     private @NotNull String senha;
 
-    @Getter(AccessLevel.PRIVATE)
     @ManyToMany(cascade=CascadeType.REFRESH)
     @JoinTable(
         name="usuarios_roles",
         joinColumns=@JoinColumn(name="uuid_usuario"),
         inverseJoinColumns=@JoinColumn(name="id_role")
     )
+    @Fetch(FetchMode.SUBSELECT)
     private @NotNull Set<Role> roles = new HashSet<>();
+
+    public Usuario(UUID uuid, @NotNull String apelido, @NotNull @Email String email,
+                   @NotNull @Size(min=60, max=60) String senha, @Nullable Set<Role> roles) {
+        this.uuid = uuid;
+        this.apelido = apelido;
+        this.email = email;
+        this.senha = senha;
+        this.roles = roles != null ? roles : new HashSet<>();
+    }
 
     // MÉTODOS
     public void merge(Usuario usuario) {
@@ -81,6 +93,10 @@ public abstract class Usuario implements Mergeable<Usuario>, UserDetails {
 
     public void addRoles(Collection<Role> roles) {
         this.roles.addAll(roles);
+    }
+
+    public Set<Role> getRoles() {
+        return Set.copyOf(roles);
     }
 
     @Override
