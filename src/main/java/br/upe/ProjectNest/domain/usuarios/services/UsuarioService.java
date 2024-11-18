@@ -1,38 +1,43 @@
 package br.upe.ProjectNest.domain.usuarios.services;
 
-import br.upe.ProjectNest.domain.common.pagination.PaginatedResult;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.EmpresaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.PessoaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.fetch.UsuarioDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.registration.UsuarioCreationDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.EmpresaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.PessoaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
+import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface UsuarioService {
 
     // REGISTRO
-    UsuarioDTO registerUsuario(UsuarioCreationDTO dto);
+    UsuarioDTO create(UsuarioCreationDTO dto);
 
     // BUSCA
     Optional<UsuarioDTO> getByUuid(UUID uuid);
 
     Optional<UsuarioDTO> getByEmail(String email);
 
-    PaginatedResult<UsuarioDTO> searchByApelido(String apelido, Pageable pageable);
+    PagedModel<UsuarioDTO> searchByApelido(String apelido, Pageable pageable);
 
-    PaginatedResult<PessoaDTO> searchPessoaByApelido(String apelido, Pageable pageable);
+    PagedModel<PessoaDTO> searchPessoaByApelido(String apelido, Pageable pageable);
 
-    PaginatedResult<EmpresaDTO> searchEmpresaByNome(String empresa, Pageable pageable);
+    PagedModel<EmpresaDTO> searchEmpresaByNome(String empresa, Pageable pageable);
 
-    PaginatedResult<EmpresaDTO> getAllEmpresas(Pageable pageable);
+    PagedModel<EmpresaDTO> getAllEmpresas(Pageable pageable);
 
     Optional<EmpresaDTO> getEmpresaByCNPJ(String cnpj);
 
     // ATUALIZAÇÃO
-    UsuarioDTO update(UsuarioDTO dto);
+    PessoaDTO update(PessoaDTO dto);
+
+    EmpresaDTO update(EmpresaDTO dto);
 
     // DELEÇÃO
-    void deleteUsuario(UUID uuid);
+    void delete(UUID uuid);
+
+    Set<UsuarioDTO> findUsuariosByUUIDs(Set<UUID> uuids);
 
 }

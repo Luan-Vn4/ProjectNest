@@ -18,7 +18,7 @@ public class ContribuicaoController {
 
     private final ContribuicaoService contribuicaoService;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<ContribuicaoDTO>> getAll() {
         return ResponseEntity.ok().body(contribuicaoService.getAll());
     }
@@ -32,19 +32,19 @@ public class ContribuicaoController {
         }
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ContribuicaoDTO> create(@Valid @RequestBody ContribuicaoCreationDTO contribuicaoDTO) {
         return ResponseEntity.ok().body(contribuicaoService.save(contribuicaoDTO));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity update(@Valid @RequestBody ContribuicaoDTO contribuicaoDTO) {
+    @PutMapping
+    public ResponseEntity<?> update(@Valid @RequestBody ContribuicaoDTO contribuicaoDTO) {
         contribuicaoService.update(contribuicaoDTO);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable UUID id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         try {
             contribuicaoService.delete(id);
             return ResponseEntity.noContent().build();
