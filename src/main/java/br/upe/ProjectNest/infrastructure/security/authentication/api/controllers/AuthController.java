@@ -7,22 +7,24 @@ import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.login.
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.EmpresaCreationDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.PessoaCreationDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.update.PasswordChangeDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
 public interface AuthController {
 
-    ResponseEntity<AuthResponseDTO> authenticate(AuthDTO dto);
+    ResponseEntity<AuthResponseDTO> authenticate(@Valid AuthDTO dto);
 
     ResponseEntity<AuthResponseDTO> validateToken(String token);
 
-    ResponseEntity<PessoaDTO> register(PessoaCreationDTO dto);
+    ResponseEntity<PessoaDTO> register(@Valid PessoaCreationDTO dto);
 
-    ResponseEntity<EmpresaDTO> register(EmpresaCreationDTO dto);
+    ResponseEntity<EmpresaDTO> register(@Valid EmpresaCreationDTO dto);
 
-    ResponseEntity<Void> changePassword(String token, UUID uuid, PasswordChangeDTO dto);
+    ResponseEntity<?> changePassword(String token, UUID uuid, @Valid PasswordChangeDTO dto);
 
-    ResponseEntity<Void> deleteAccount(String token, String password, UUID uuid);
+    ResponseEntity<?> deleteAccount(String token, @Size(min=6) String password, UUID uuid);
 
 }
