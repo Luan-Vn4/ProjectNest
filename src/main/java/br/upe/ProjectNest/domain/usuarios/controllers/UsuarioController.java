@@ -1,8 +1,6 @@
 package br.upe.ProjectNest.domain.usuarios.controllers;
 
-import br.upe.ProjectNest.domain.usuarios.dtos.EmpresaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.PessoaDTO;
-import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.*;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -59,15 +57,17 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/pessoas")
-    public ResponseEntity<PessoaDTO> updateUsuario(@Valid @RequestBody PessoaDTO usuario) {
-        PessoaDTO updated = usuarioService.update(usuario);
+    @PutMapping(value = "/pessoas/{uuid}")
+    public ResponseEntity<PessoaDTO> updateUsuario(@Valid @RequestBody UpdatePessoaDTO usuario,
+                                                   @PathVariable(name="uuid") UUID uuid) {
+        PessoaDTO updated = (PessoaDTO) usuarioService.update(usuario, uuid);
         return ResponseEntity.ok(updated);
     }
 
-    @PutMapping("/empresas")
-    public ResponseEntity<EmpresaDTO> updateEmpresa(@Valid @RequestBody EmpresaDTO empresa) {
-        EmpresaDTO updated = usuarioService.update(empresa);
+    @PutMapping(value = "/empresas/{uuid}")
+    public ResponseEntity<EmpresaDTO> updateEmpresa(@Valid @RequestBody UpdateEmpresaDTO empresa,
+                                                    @PathVariable(name="uuid") UUID uuid) {
+        EmpresaDTO updated = (EmpresaDTO) usuarioService.update(empresa, uuid);
         return ResponseEntity.ok(updated);
     }
 

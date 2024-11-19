@@ -2,6 +2,7 @@ package br.upe.ProjectNest.domain.usuarios.services;
 
 import br.upe.ProjectNest.domain.usuarios.dtos.EmpresaDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.PessoaDTO;
+import br.upe.ProjectNest.domain.usuarios.dtos.UpdateUsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.registration.UsuarioCreationDTO;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +32,7 @@ public interface UsuarioService {
     Optional<EmpresaDTO> getEmpresaByCNPJ(String cnpj);
 
     // ATUALIZAÇÃO
-    PessoaDTO update(PessoaDTO dto);
-
-    EmpresaDTO update(EmpresaDTO dto);
+    UsuarioDTO update(UpdateUsuarioDTO dto, UUID uuid);
 
     // DELEÇÃO
     void delete(UUID uuid);
