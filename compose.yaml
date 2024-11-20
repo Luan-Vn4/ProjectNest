@@ -1,0 +1,14 @@
+services:
+  postgres:
+    container_name: postgres-project-nest
+    image: postgres:17
+    profiles:
+      - "dev"
+    environment:
+      POSTGRES_DB: project_nest
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-volumes/database:/var/lib/postgresql/data
