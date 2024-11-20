@@ -2,6 +2,7 @@ package br.upe.ProjectNest.infrastructure.security.tokens.services;
 
 import br.upe.ProjectNest.infrastructure.security.authentication.services.AuthDetailsService;
 import br.upe.ProjectNest.infrastructure.security.tokens.dtos.TokenDTO;
+import br.upe.ProjectNest.infrastructure.security.tokens.utils.TokenUtils;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,7 +30,7 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response,
                                     @Nonnull FilterChain filterChain) throws ServletException, IOException {
-        Optional<String> token = extractToken(request);
+        Optional<String> token = TokenUtils.extractTokenFromRequest(request);
 
         if (token.isEmpty()) {
             filterChain.doFilter(request, response);
@@ -45,12 +46,6 @@ public class TokenFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
-    }
-
-    private Optional<String> extractToken(@Nonnull HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null) return Optional.empty();
-        return Optional.of(authorization.replace("Bearer ", ""));
     }
 
 }

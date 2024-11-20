@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO validateToken(String token) {
-        TokenDTO tokenDTO = tokenService.validateToken(token);
+        TokenDTO tokenDTO = tokenService.validateToken(TokenUtils.extractToken(token));
         Optional<UsuarioDTO> usuarioDTO = usuarioService.getByUuid(UUID.fromString(tokenDTO.subject()));
 
         if (usuarioDTO.isEmpty()) throw new InvalidTokenSubjectException(token, tokenDTO.subject());
