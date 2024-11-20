@@ -2,7 +2,6 @@ package br.upe.ProjectNest.infrastructure.security.tokens.utils;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.Optional;
 
 public class TokenUtils {

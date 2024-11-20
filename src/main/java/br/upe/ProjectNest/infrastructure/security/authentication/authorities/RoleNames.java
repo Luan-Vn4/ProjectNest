@@ -3,7 +3,6 @@ package br.upe.ProjectNest.infrastructure.security.authentication.authorities;
 import br.upe.ProjectNest.domain.usuarios.models.Empresa;
 import br.upe.ProjectNest.domain.usuarios.models.Pessoa;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
-import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,12 +14,10 @@ import java.util.Set;
 public class RoleNames {
 
     // CONSTANTES
-    @Transient
     public static String PESSOA = "ROLE_PESSOA";
-    @Transient
+
     public static String EMPRESA = "ROLE_EMPRESA";
 
-    @Transient
     public static String ADMIN = "ROLE_ADMIN";
 
     /**
@@ -30,5 +27,17 @@ public class RoleNames {
         Pessoa.class, Set.of(PESSOA),
         Empresa.class, Set.of(EMPRESA)
     );
+
+    public String getPessoa() {
+        return PESSOA;
+    }
+
+    public String getEmpresa() {
+        return EMPRESA;
+    }
+
+    public String getAdmin() {
+        return ADMIN;
+    }
 
 }

@@ -23,8 +23,8 @@ public interface AuthController {
 
     ResponseEntity<EmpresaDTO> register(@Valid EmpresaCreationDTO dto);
 
-    ResponseEntity<?> changePassword(String token, UUID uuid, @Valid PasswordChangeDTO dto);
+    ResponseEntity<?> changePassword(String authorization, UUID uuid, @Valid PasswordChangeDTO dto);
 
-    ResponseEntity<?> deleteAccount(String token, @Size(min=6) String password, UUID uuid);
+    ResponseEntity<?> deleteAccount(String authorization, @Size(min=6) String password, UUID uuid);
 
 }

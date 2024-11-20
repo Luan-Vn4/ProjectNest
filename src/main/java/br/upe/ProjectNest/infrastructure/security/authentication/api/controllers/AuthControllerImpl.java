@@ -13,7 +13,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
@@ -50,22 +49,19 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     @PatchMapping(value="/usuarios/{uuid}/password", headers=AUTHORIZATION)
-    public ResponseEntity<?> changePassword(@RequestHeader(AUTHORIZATION) String token,
+    public ResponseEntity<?> changePassword(@RequestHeader(AUTHORIZATION) String authorization,
                                                @PathVariable UUID uuid,
                                                @Valid @RequestBody PasswordChangeDTO dto) {
-        // TODO changePassword()
-        authServiceImpl.changePassword(token, uuid, dto);
+        authServiceImpl.changePassword(authorization, uuid, dto);
         return ResponseEntity.ok().build();
     }
 
     @Override
     @DeleteMapping(value="/usuarios/{uuid}", headers=AUTHORIZATION)
-    @PreAuthorize("hasRole(@roleNames.ADMIN)")
-    public ResponseEntity<?> deleteAccount(@RequestHeader(AUTHORIZATION) String token,
-                                              @RequestBody @Size(min=6) String password,
-                                              @PathVariable UUID uuid) {
-        // TODO changePassword()
-        authServiceImpl.deleteAccount(token, uuid, password);
+    public ResponseEntity<?> deleteAccount(@RequestHeader(AUTHORIZATION) String authorization,
+                                           @RequestBody @Size(min=6) String password,
+                                           @PathVariable UUID uuid) {
+        authServiceImpl.deleteAccount(authorization, uuid, password);
         return ResponseEntity.ok().build();
     }
 

@@ -1,7 +1,9 @@
 package br.upe.ProjectNest.infrastructure.security.authentication.services;
 
 import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
+import br.upe.ProjectNest.domain.usuarios.exceptions.UsuarioNotFoundException;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
+import br.upe.ProjectNest.domain.usuarios.repositories.UsuarioRepository;
 import br.upe.ProjectNest.domain.usuarios.services.UsuarioService;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.login.AuthDTO;
 import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.login.AuthResponseDTO;
@@ -11,26 +13,35 @@ import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.regist
 import br.upe.ProjectNest.infrastructure.security.tokens.dtos.TokenDTO;
 import br.upe.ProjectNest.infrastructure.security.tokens.exceptions.InvalidTokenSubjectException;
 import br.upe.ProjectNest.infrastructure.security.tokens.services.TokenService;
+import br.upe.ProjectNest.infrastructure.security.tokens.utils.TokenUtils;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service("authService")
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     // ATRIBUTOS
     private UsuarioService usuarioService;
 
+    private UsuarioRepository usuarioRepository;
+
     private AuthenticationManager authManager;
 
     private TokenService tokenService;
 
     private UsuarioCreationMapper usuarioCreationMapper;
+
+    private PasswordEncoder encoder;
 
 
     // MÉTODOS
@@ -47,11 +58,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDTO validateToken(String token) {
-        TokenDTO tokenDTO = tokenService.validateToken(TokenUtils.extractToken(token));
+    public AuthResponseDTO validateToken(String authorization) {
+        TokenDTO tokenDTO = tokenService.validateToken(TokenUtils.extractToken(authorization));
         Optional<UsuarioDTO> usuarioDTO = usuarioService.getByUuid(UUID.fromString(tokenDTO.subject()));
 
-        if (usuarioDTO.isEmpty()) throw new InvalidTokenSubjectException(token, tokenDTO.subject());
+        if (usuarioDTO.isEmpty()) throw new InvalidTokenSubjectException(authorization, tokenDTO.subject());
 
         return new AuthResponseDTO(usuarioDTO.get(), tokenDTO);
     }
@@ -60,25 +71,35 @@ public class AuthServiceImpl implements AuthService {
     public UsuarioDTO register(UsuarioCreationDTO dto) {
         Usuario usuario = usuarioCreationMapper.toEntity(dto);
 
-        usuario.setSenha(encodePassword(usuario.getSenha()));
+        usuario.setSenha(encoder.encode(usuario.getSenha()));
 
-        UsuarioDTO usuarioDTO = usuarioService.create(usuarioCreationMapper.toDto(usuario));
-
-        return usuarioDTO;
-    }
-
-    private String encodePassword(String password) {
-        return new BCryptPasswordEncoder().encode(password);
+        return usuarioService.create(usuarioCreationMapper.toDto(usuario));
     }
 
     @Override
-    public void changePassword(String token, UUID uuid, PasswordChangeDTO dto) {
-        // TODO changePassword()
+    @Transactional
+    @PreAuthorize("@authService.validateToken(#authorization).usuarioDTO().uuid() eq #uuid")
+    public void changePassword(String authorization, UUID uuid, PasswordChangeDTO dto) {
+        Optional<Usuario> usuario = usuarioRepository.findById(uuid);
+
+        if (usuario.isEmpty()) throw new UsuarioNotFoundException("Não foi possível encontrar o " +
+            "usuário com UUID: " + uuid);
+
+        if (!encoder.matches(dto.oldPassword(), usuario.get().getSenha())) throw new
+            AuthorizationDeniedException("A senha antiga fornecida não corresponde " +
+            "à senha atual", new AuthorizationDecision(false));
+
+        usuario.get().setSenha(encoder.encode(dto.newPassword()));
+        usuarioRepository.save(usuario.get());
     }
 
     @Override
-    public void deleteAccount(String token, UUID uuid, String password) {
-        // TODO deleteAccount()
+    @PreAuthorize("""
+        hasRole(@roleNames.ADMIN) or
+        @authService.validateToken(#authorization).usuarioDTO().uuid() eq #uuid
+    """)
+    public void deleteAccount(String authorization, UUID uuid, String password) {
+        usuarioService.delete(uuid);
     }
 
 }

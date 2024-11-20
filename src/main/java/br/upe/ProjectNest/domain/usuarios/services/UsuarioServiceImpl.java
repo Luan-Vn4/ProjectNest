@@ -1,6 +1,7 @@
 package br.upe.ProjectNest.domain.usuarios.services;
 
 import br.upe.ProjectNest.domain.usuarios.dtos.*;
+import br.upe.ProjectNest.domain.usuarios.exceptions.UsuarioNotFoundException;
 import br.upe.ProjectNest.domain.usuarios.models.Usuario;
 import br.upe.ProjectNest.domain.usuarios.repositories.EmpresaRepository;
 import br.upe.ProjectNest.domain.usuarios.repositories.PessoaRepository;
@@ -10,7 +11,6 @@ import br.upe.ProjectNest.infrastructure.security.authentication.api.dtos.regist
 import br.upe.ProjectNest.infrastructure.security.authentication.authorities.Role;
 import br.upe.ProjectNest.infrastructure.security.authentication.authorities.RoleNames;
 import br.upe.ProjectNest.infrastructure.security.authentication.services.roles.RoleService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -97,8 +97,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario received = updateUsuarioMapper.toEntity(dto, uuid);
         Optional<Usuario> queryResult = usuarioRepository.findById(uuid);
 
-        if (queryResult.isEmpty()) throw new EntityNotFoundException(
-            "Não foi possível encontrar um usuário com o UUID: " + uuid);
+        if (queryResult.isEmpty()) throw new UsuarioNotFoundException(uuid);
 
         Usuario found = queryResult.get();
         found.merge(received);
@@ -109,6 +108,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public void delete(UUID uuid) {
+        Optional<UsuarioDTO> usuario = getByUuid(uuid);
+
+        if (usuario.isEmpty()) throw new UsuarioNotFoundException(uuid);
+
         usuarioRepository.deleteById(uuid);
     }
 
@@ -116,4 +119,5 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Set<UsuarioDTO> findUsuariosByUUIDs(Set<UUID> uuids) {
         return usuarioRepository.findByUuidIn(uuids).stream().map(usuarioMapper::toDto).collect(Collectors.toSet());
     }
+
 }

@@ -10,6 +10,7 @@ import org.springframework.data.web.PagedModel;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import br.upe.ProjectNest.domain.usuarios.exceptions.UsuarioNotFoundException;
 
 public interface UsuarioService {
 
@@ -35,6 +36,12 @@ public interface UsuarioService {
     UsuarioDTO update(UpdateUsuarioDTO dto, UUID uuid);
 
     // DELEÇÃO
+
+    /**
+     * Deleta um usuário, de acordo com seu UUID
+     * @param uuid UUID do usuário que será deletado
+     * @throws UsuarioNotFoundException caso não exista um usuário com aquele UUID
+     */
     void delete(UUID uuid);
 
     Set<UsuarioDTO> findUsuariosByUUIDs(Set<UUID> uuids);
