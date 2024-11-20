@@ -62,8 +62,8 @@ public class TokenService {
      * Valida o token fornecido
      * @param token que deseja verificar
      * @return {@link TokenDTO} com as informações do token retornado
-     * @throws TokenExpiredException caso o token esteja expirado
-     * @throws JWTVerificationException caso o token seja inválido
+     * @throws ExpiredTokenException caso o token esteja expirado
+     * @throws InvalidTokenException caso o token seja inválido
      */
     public TokenDTO validateToken(@NotNull String token) {
         try {
