@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public AuthResponseDTO authenticate(AuthDTO authDTO) {
-        var authCredentials = new UsernamePasswordAuthenticationToken(authDTO.email(), authDTO.password());
+        var authCredentials = new UsernamePasswordAuthenticationToken(authDTO.email(), authDTO.senha());
         authManager.authenticate(authCredentials);
 
         UsuarioDTO usuarioDTO = usuarioService.getByEmail(authDTO.email()).get();

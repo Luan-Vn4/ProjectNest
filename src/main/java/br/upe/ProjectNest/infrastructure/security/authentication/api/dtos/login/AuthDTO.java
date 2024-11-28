@@ -10,5 +10,5 @@ public record AuthDTO(
     @NotNull @Email @Size(max=255)
     String email,
     @NotNull @Size(min = 6)
-    String password
+    String senha
 ) {}
