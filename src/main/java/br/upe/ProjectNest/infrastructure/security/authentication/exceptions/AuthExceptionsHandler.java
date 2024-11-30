@@ -3,6 +3,7 @@ package br.upe.ProjectNest.infrastructure.security.authentication.exceptions;
 import br.upe.ProjectNest.domain.common.exceptions.ExceptionBody;
 import br.upe.ProjectNest.domain.common.utils.RequestUtils;
 import br.upe.ProjectNest.infrastructure.security.tokens.exceptions.ExpiredTokenException;
+import br.upe.ProjectNest.infrastructure.security.tokens.exceptions.InvalidTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,20 @@ public class AuthExceptionsHandler {
         var response = ExceptionBody.builder()
             .httpStatus(HttpStatus.UNAUTHORIZED.value())
             .error("Tokén expirado")
+            .message(exception.getMessage())
+            .request(RequestUtils.getFullRequestURL(req))
+            .timeStamp(Instant.now())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ExceptionBody> handleExpiredTokenException(InvalidTokenException exception,
+                                                                     HttpServletRequest req) {
+        var response = ExceptionBody.builder()
+            .httpStatus(HttpStatus.UNAUTHORIZED.value())
+            .error("Tokén Inválido")
             .message(exception.getMessage())
             .request(RequestUtils.getFullRequestURL(req))
             .timeStamp(Instant.now())
