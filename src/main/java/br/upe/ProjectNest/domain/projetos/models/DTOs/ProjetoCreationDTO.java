@@ -22,8 +22,6 @@ public record ProjetoCreationDTO(
         String urlRepositorio,
 
         @NotNull
-        Escopo escopo,
-
-        @NotNull
-        Status status) {
+        Escopo escopo
+        ) {
 }

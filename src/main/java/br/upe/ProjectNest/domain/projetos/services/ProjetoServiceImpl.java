@@ -6,6 +6,7 @@ import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoMapper;
 import br.upe.ProjectNest.domain.projetos.models.Projeto;
+import br.upe.ProjectNest.domain.projetos.models.enums.Status;
 import br.upe.ProjectNest.domain.projetos.repositories.ProjetoRepository;
 import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
 import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioMapper;
@@ -55,6 +56,7 @@ public class ProjetoServiceImpl implements ProjetoService {
 
         Projeto projeto = projetoMapper.toEntity(projetoDTO);
         projeto.setDono(usuarioMapper.toEntity(dono));
+        projeto.setStatus(Status.EM_ANDAMENTO);
         Projeto registeredProjeto = projetoRepository.save(projeto);
 
         return projetoMapper.toDto(registeredProjeto);

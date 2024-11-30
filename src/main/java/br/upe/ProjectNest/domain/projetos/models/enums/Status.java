@@ -1,13 +1,20 @@
 package br.upe.ProjectNest.domain.projetos.models.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Status {
     PENDENTE("Pendente"),
-    CONCLUIDO("Concluido"),
-    EM_ANDAMENTO("EmAndamento");
+    CONCLUIDO("Concluído"),
+    EM_ANDAMENTO("Em andamento");
 
-    private final String status;
+    private final String descricao;
 
-    Status(String status) {
-        this.status = status;
+    Status(String descricao) {
+        this.descricao = descricao;
+    }
+
+    @JsonValue
+    public String getDescricao() {
+        return descricao;
     }
 }
