@@ -39,8 +39,8 @@ public class ProjetoController {
 
     @PutMapping
     public ResponseEntity<?> update(@Valid @RequestBody ProjetoDTO projetoDTO) {
-        projetoService.update(projetoDTO);
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok().body(projetoService.update(projetoDTO));
     }
 
     @DeleteMapping("/{id}")

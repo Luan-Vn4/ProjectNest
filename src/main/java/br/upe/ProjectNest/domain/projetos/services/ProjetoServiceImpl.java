@@ -65,7 +65,7 @@ public class ProjetoServiceImpl implements ProjetoService {
 
     @Override
     @Transactional
-    public void update(ProjetoDTO projetoDTO) {
+    public ProjetoDTO update(ProjetoDTO projetoDTO) {
         Projeto existingProjeto = projetoRepository.findById(projetoDTO.uuid()).orElseThrow(() ->
                 new ProjetoNotFoundException(projetoDTO.uuid())
         );
@@ -82,7 +82,8 @@ public class ProjetoServiceImpl implements ProjetoService {
         existingProjeto.setEscopo(projetoDTO.escopo());
         existingProjeto.setStatus(projetoDTO.status());
 
-        projetoRepository.save(existingProjeto);
+        Projeto projetoAtualizado = projetoRepository.save(existingProjeto);
+        return projetoMapper.toDto(projetoAtualizado);
     }
 
 

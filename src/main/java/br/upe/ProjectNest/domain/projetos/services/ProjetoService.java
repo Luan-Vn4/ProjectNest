@@ -15,7 +15,7 @@ public interface ProjetoService {
 
     ProjetoDTO save(ProjetoCreationDTO projetoDTO);
 
-    void update(ProjetoDTO projeto);
+    ProjetoDTO update(ProjetoDTO projeto);
 
     void delete(UUID id);
 }
