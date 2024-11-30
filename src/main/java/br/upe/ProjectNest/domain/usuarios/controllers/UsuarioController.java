@@ -24,7 +24,10 @@ public class UsuarioController {
     @GetMapping("/{uuid}")
     public ResponseEntity<UsuarioDTO> getBtUuid(@PathVariable UUID uuid) {
         Optional<UsuarioDTO> result = usuarioService.getByUuid(uuid);
-        return ResponseEntity.ok(result.orElseThrow(EntityNotFoundException::new));
+        return ResponseEntity.ok(result.orElseThrow(() ->
+            new EntityNotFoundException("Não foi encontrado um usuário com UUID %s"
+                .formatted(uuid))
+        ));
     }
 
     @GetMapping(params = "apelido")
