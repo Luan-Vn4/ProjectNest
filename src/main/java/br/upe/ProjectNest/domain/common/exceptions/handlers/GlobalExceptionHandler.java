@@ -3,6 +3,7 @@ package br.upe.ProjectNest.domain.common.exceptions.handlers;
 import br.upe.ProjectNest.domain.common.exceptions.ExceptionBody;
 import br.upe.ProjectNest.domain.common.utils.RequestUtils;
 import jakarta.annotation.Priority;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
@@ -73,5 +74,20 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionBody> handleEntityNotFoundException(EntityNotFoundException ex,
+                                                                       HttpServletRequest req) {
+        var response = ExceptionBody.builder()
+            .httpStatus(HttpStatus.NOT_FOUND.value())
+            .error("Entidade não encontrada")
+            .message(ex.getMessage())
+            .request(RequestUtils.getFullRequestURL(req))
+            .timeStamp(Instant.now())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
 
 }
