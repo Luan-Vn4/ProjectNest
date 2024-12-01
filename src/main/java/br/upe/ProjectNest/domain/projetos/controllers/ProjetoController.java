@@ -1,5 +1,7 @@
 package br.upe.ProjectNest.domain.projetos.controllers;
 
+import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
+import br.upe.ProjectNest.domain.contribuicoes.services.ContribuicaoService;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 import br.upe.ProjectNest.domain.projetos.services.ProjetoService;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class ProjetoController {
 
     private ProjetoService projetoService;
+    private ContribuicaoService contribuicaoService;
 
     @GetMapping
     public ResponseEntity<List<ProjetoDTO>> getAll() {
@@ -53,4 +56,8 @@ public class ProjetoController {
         }
     }
 
+    @GetMapping("/{id}/contribuicoes")
+    public ResponseEntity<List<ContribuicaoDTO>> findContribuicoesByProjeto(@PathVariable UUID id) {
+        return ResponseEntity.ok(contribuicaoService.findContribuicoesByProjeto(id));
+    }
 }

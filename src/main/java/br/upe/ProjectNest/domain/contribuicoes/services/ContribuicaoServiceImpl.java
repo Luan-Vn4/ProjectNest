@@ -110,4 +110,9 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
         contribuicaoRepository.delete(contribuicaoMapper.toEntity(existingContribuicao));
     }
 
+    @Override
+    public List<ContribuicaoDTO> findContribuicoesByProjeto(UUID id) {
+        var contribuicoes =contribuicaoRepository.findByProjeto_Uuid(id);
+        return contribuicoes.stream().map(contribuicaoMapper::toDto).toList();
+    }
 }

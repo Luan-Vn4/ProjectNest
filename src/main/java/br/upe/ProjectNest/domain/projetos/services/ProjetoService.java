@@ -1,5 +1,6 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
+import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 

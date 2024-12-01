@@ -20,4 +20,5 @@ public interface ContribuicaoService {
 
     void delete(UUID id);
 
+    List<ContribuicaoDTO> findContribuicoesByProjeto(UUID id);
 }

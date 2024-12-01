@@ -1,5 +1,6 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
+import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import br.upe.ProjectNest.domain.projetos.exceptions.ProjetoExistsException;
 import br.upe.ProjectNest.domain.projetos.exceptions.ProjetoNotFoundException;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
@@ -96,6 +97,7 @@ public class ProjetoServiceImpl implements ProjetoService {
         }
 
         projetoRepository.delete(projetoMapper.toEntity(existingProjeto));
-
     }
+
+
 }
