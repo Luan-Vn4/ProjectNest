@@ -1,6 +1,5 @@
 package br.upe.ProjectNest.domain.projetos.services;
 
-import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoCreationDTO;
 import br.upe.ProjectNest.domain.projetos.models.DTOs.ProjetoDTO;
 
@@ -19,4 +18,6 @@ public interface ProjetoService {
     ProjetoDTO update(ProjetoDTO projeto);
 
     void delete(UUID id);
+
+    List<ProjetoDTO> searchByTitle(String title);
 }

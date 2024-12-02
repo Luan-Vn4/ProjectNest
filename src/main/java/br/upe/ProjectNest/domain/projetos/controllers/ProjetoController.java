@@ -60,4 +60,10 @@ public class ProjetoController {
     public ResponseEntity<List<ContribuicaoDTO>> findContribuicoesByProjeto(@PathVariable UUID id) {
         return ResponseEntity.ok(contribuicaoService.findContribuicoesByProjeto(id));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProjetoDTO>> searchByTitle(@RequestParam String title) {
+        List<ProjetoDTO> projetos = projetoService.searchByTitle(title);
+        return ResponseEntity.ok(projetos);
+    }
 }

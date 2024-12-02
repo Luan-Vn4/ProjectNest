@@ -98,6 +98,11 @@ public class ProjetoServiceImpl implements ProjetoService {
 
         projetoRepository.delete(projetoMapper.toEntity(existingProjeto));
     }
-
+    public List<ProjetoDTO> searchByTitle(String title) {
+        return projetoRepository.findByTituloContainingIgnoreCase(title)
+                .stream()
+                .map(projetoMapper::toDto)
+                .toList();
+    }
 
 }
