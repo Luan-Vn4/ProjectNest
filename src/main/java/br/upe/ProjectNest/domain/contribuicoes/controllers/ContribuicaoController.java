@@ -3,6 +3,7 @@ package br.upe.ProjectNest.domain.contribuicoes.controllers;
 import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoCreationDTO;
 import br.upe.ProjectNest.domain.contribuicoes.models.DTOs.ContribuicaoDTO;
 import br.upe.ProjectNest.domain.contribuicoes.services.ContribuicaoService;
+import br.upe.ProjectNest.domain.usuarios.dtos.UsuarioDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,11 @@ public class ContribuicaoController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/{idContribuicao}")
+    public ResponseEntity<List<UsuarioDTO>> getContribuintes(@PathVariable UUID idContribuicao, @RequestBody List<UUID> idsContribuintes) {
+        return ResponseEntity.ok().body(contribuicaoService.getContribuintes(idContribuicao,idsContribuintes));
     }
 
 }

@@ -115,4 +115,14 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
         var contribuicoes =contribuicaoRepository.findByProjeto_Uuid(id);
         return contribuicoes.stream().map(contribuicaoMapper::toDto).toList();
     }
+
+    @Override
+    public List<UsuarioDTO> getContribuintes(UUID idContribuicao, List<UUID> idsContribuintes) {
+        contribuicaoRepository.findById(idContribuicao)
+                .orElseThrow(() -> new ContribuicaoNotFoundException(idContribuicao));
+
+        Set<UsuarioDTO> usuarios = usuarioService.findUsuariosByUUIDs(Set.copyOf(idsContribuintes));
+
+        return usuarios.stream().toList();
+    }
 }
