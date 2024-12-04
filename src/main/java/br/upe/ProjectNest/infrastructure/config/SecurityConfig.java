@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -42,6 +44,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests(handler -> handler
                 .requestMatchers(POST, "/api/v1/auth/login").permitAll()
                 .requestMatchers(POST, "/api/v1/auth/usuarios/*").permitAll()
+                .requestMatchers(GET, "/api/v1/usuarios/**").permitAll()
+                .requestMatchers(GET, "/api/v1/projetos/**").permitAll()
+                .requestMatchers(GET, "/api/v1/contribuicoes/**").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
