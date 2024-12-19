@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .requestMatchers(GET, "/api/v1/usuarios/**").permitAll()
                 .requestMatchers(GET, "/api/v1/projetos/**").permitAll()
                 .requestMatchers(GET, "/api/v1/contribuicoes/**").permitAll()
+                .requestMatchers(GET, "/health").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
